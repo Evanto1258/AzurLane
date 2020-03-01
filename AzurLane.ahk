@@ -3599,7 +3599,8 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 	if (StopAnchor=1)
 	{
 		LogShow("停止出擊中，返回首頁")
-		C_Click(1228, 72)
+		C_Click(56, 86)
+		sleep 1000
 		return
 	}
 	if (BattleTimes) ;如果有勾選出擊N輪
