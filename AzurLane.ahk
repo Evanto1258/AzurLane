@@ -821,54 +821,63 @@ else if (CheckUpdate) { ;啟動時檢查自動更新
 	gosub, Isupdate2
 }
 ;//////////////刪除雷電模擬器可能的惡意廣告檔案//////////////////
+iniread, DeleteAdsCheck, %SettingName%, DeleteAdsCheck, DeleteAdsCheck, 0
 DefaultDir = %A_WorkingDir%
 SetWorkingDir, %ldplayer%
-OnMessage(0x53, "WM_HELP")
-if (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe") or FileExist("news")) {
-	MsgBox, 24628, 敬告, 發現雷電模擬器中的廣告檔案，是否自動刪除？
-	IfMsgBox Yes
-	{
-		while (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe") or FileExist("news"))
-		{ ;ldnews.exe 刪除不影響運作 看起來很像廣告檔案
-			WinClose, ahk_exe fynews.exe
-			WinClose, ahk_exe fyservice.exe
-			WinClose, ahk_exe ldnews.exe
-			FileDelete, fynews.exe
-			FileDelete, fyservice.exe
-			FileDelete, ldnews.exe
-			FileRemoveDir, news, 1
-		}		
-		SetWorkingDir, %A_temp%
-		while (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe"))
-		{
-			WinClose, ahk_exe fynews.exe
-			WinClose, ahk_exe fyservice.exe
-			WinClose, ahk_exe ldnews.exe
-			FileDelete, fynews.exe
-			FileDelete, fyservice.exe
-			FileDelete, ldnews.exe
-		}
-		While (InStr(FileExist("fy"), "D"))
-		{
-			WinClose, ahk_exe fynews.exe
-			WinClose, ahk_exe fyservice.exe
-			WinClose, ahk_exe ldnews.exe
-			FileRemoveDir, fy, 1
-		}
-		LogShow("廣告檔案刪除成功")
-	}
-	else IfMsgBox No 
-	{
-	}
-} 
-SetWorkingDir, %A_temp%
-While (InStr(FileExist("fy"), "D"))
+if !(DeleteAdsCheck)
 {
-	WinClose, ahk_exe fynews.exe
-	WinClose, ahk_exe fyservice.exe
-	WinClose, ahk_exe ldnews.exe
-	FileRemoveDir, fy, 1
-	LogShow("發現雷電的廣告檔案，自動刪除")
+	if (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe") or FileExist("news")) {
+		Text := "發現"
+		. "<a href=""https://www.reddit.com/r/RagnarokMobile/comments/e6cccx/tech_support_ldplayer_update_added_shady/"">"
+		. "雷電模擬器中的廣告檔案</a>，是否自動刪除？"
+		DeleteAdsCheck := "不刪除且不再提示"
+		Result := MsgBoxEx(Text, "敬告", "確認|取消", 2, DeleteAdsCheck)
+		if (DeleteAdsCheck=1)
+		{
+			SetWorkingDir, %DefaultDir%
+			iniwrite, 1, %SettingName%, DeleteAdsCheck, DeleteAdsCheck
+		}
+		else If (Result == "確認") 
+		{
+			while (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe") or FileExist("news"))
+			{ ;ldnews.exe 刪除不影響運作 看起來很像廣告檔案
+				WinClose, ahk_exe fynews.exe
+				WinClose, ahk_exe fyservice.exe
+				WinClose, ahk_exe ldnews.exe
+				FileDelete, fynews.exe
+				FileDelete, fyservice.exe
+				FileDelete, ldnews.exe
+				FileRemoveDir, news, 1
+				if (A_index>20)
+					DeleteAdFailed := 1
+			}		
+			SetWorkingDir, %A_temp%
+			while (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe"))
+			{
+				WinClose, ahk_exe fynews.exe
+				WinClose, ahk_exe fyservice.exe
+				WinClose, ahk_exe ldnews.exe
+				FileDelete, fynews.exe
+				FileDelete, fyservice.exe
+				FileDelete, ldnews.exe
+				if (A_index>20)
+					DeleteAdFailed := 1
+			}
+			While (InStr(FileExist("fy"), "D"))
+			{
+				WinClose, ahk_exe fynews.exe
+				WinClose, ahk_exe fyservice.exe
+				WinClose, ahk_exe ldnews.exe
+				FileRemoveDir, fy, 1
+				if (A_index>20)
+					break
+			}
+			if DeleteAdFailed
+				LogShow("廣告檔案刪除過程中出現問題")
+			else
+				LogShow("廣告檔案刪除成功")
+		}
+	}
 }
 SetWorkingDir, %DefaultDir%
 if (substr(A_osversion, 1, 2)!=10)
@@ -1684,14 +1693,42 @@ Loop, 3
 									Checkzz++
 									if (Checkzz=9)
 									{
-										Capture()
-										LogShow("===模擬器當機或輔助卡住，自動重啟===")
-										EmulatorCrushCheckCount := 0
-										iniwrite, "===模擬器當機或輔助卡住，自動重啟===", %SettingName%, OtherSub, AutostartMessage
-										iniwrite, 1, %SettingName%, OtherSub, Autostart
-										runwait, %Consolefile% quit --index %emulatoradb% , %ldplayer%, Hide
-										sleep 10000
-										reload
+										LogShow("畫面靜止，嘗試返回首頁")
+										C_Click(1271, 70)
+										sleep 2000
+										if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation))
+										{
+											C_Click(52, 88)
+											sleep 5000
+											if !(Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation))
+											{
+												C_Click(52, 88)
+												sleep 1500
+												LogShow("成功返回首頁")
+											}
+											else
+											{
+												Capture()
+												LogShow("===模擬器當機或輔助卡住，自動重啟===")
+												EmulatorCrushCheckCount := 0
+												iniwrite, "===模擬器當機或輔助卡住，自動重啟===", %SettingName%, OtherSub, AutostartMessage
+												iniwrite, 1, %SettingName%, OtherSub, Autostart
+												runwait, %Consolefile% quit --index %emulatoradb% , %ldplayer%, Hide
+												sleep 10000
+												reload
+											}
+										}
+										else
+										{
+											Capture()
+											LogShow("===模擬器當機或輔助卡住，自動重啟===")
+											EmulatorCrushCheckCount := 0
+											iniwrite, "===模擬器當機或輔助卡住，自動重啟===", %SettingName%, OtherSub, AutostartMessage
+											iniwrite, 1, %SettingName%, OtherSub, Autostart
+											runwait, %Consolefile% quit --index %emulatoradb% , %ldplayer%, Hide
+											sleep 10000
+											reload
+										}
 									}
 									EmulatorCrushCheckCount := 0
 									return
@@ -3022,7 +3059,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				C_Click(781, 545)
 			}
 		}
-		if (TargetFailed2<1 and (Ship_Target2 or SearchLoopcount>9)) ;
+		if (TargetFailed2<1 and (Ship_Target2 or SearchLoopcount>9)) ;運輸艦隊
 		{
 			TransFleet := ["img/SubChapter/target2_1.png", "img/SubChapter/target2_2.png"	, "img/SubChapter/target2_3.png"] 			
 			if (FindFleet(x, y, TransFleet, 103, SearchDirection, MapX1, MapY1, MapX2, MapY2))
@@ -3060,7 +3097,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				return
 			}
 		}
-		if (TargetFailed<1 and (Ship_Target1 or SearchLoopcount>9)) ;
+		if (TargetFailed<1 and (Ship_Target1 or SearchLoopcount>9)) ;航空艦隊
 		{
 			CVFleet := ["img/SubChapter/target_1.png", "img/SubChapter/target_2.png"	, "img/SubChapter/target_3.png"] 			
 			if (FindFleet(x, y, CVFleet, 32, SearchDirection, MapX1, MapY1, MapX2, MapY2) or GdipImageSearch(x, y, "img/SubChapter/target_4.png", 100, SearchDirection, MapX1, MapY1, MapX2, MapY2))
@@ -3135,7 +3172,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				return
 			}
 		}
-		if (TargetFailed4<1 and (Ship_Target4 or SearchLoopcount>9)) 
+		if (TargetFailed4<1 and (Ship_Target4 or SearchLoopcount>9)) ;偵查艦隊
 		{
 			DetectFleet := ["img/SubChapter/target4_1.png", "img/SubChapter/target4_2.png"	, "img/SubChapter/target4_3.png"] 
 			if (FindFleet(x, y, DetectFleet, 60, SearchDirection, MapX1, MapY1, MapX2, MapY2))
@@ -3173,7 +3210,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				return
 			}
 		}
-		if (TargetFailed3<1 and (Ship_Target3 or SearchLoopcount>9))
+		if (TargetFailed3<1 and (Ship_Target3 or SearchLoopcount>9)) ;主力艦隊
 		{
 			MainFleet := ["img/SubChapter/target3_1.png", "img/SubChapter/target3_2.png", "img/SubChapter/target3_3.png"]
 			if (FindFleet(x, y, MainFleet, 45, SearchDirection, MapX1, MapY1, MapX2, MapY2))
@@ -3294,7 +3331,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				return
 			}
 		}
-		if (SearchLoopcount>3 and Find(x, y, 750, 682, 850, 742, Battle_Map))
+		if (SearchLoopcount>=2 and Find(x, y, 750, 682, 850, 742, Battle_Map))
 		{
 			if (SearchFailedMessage<1)
 			{
@@ -5686,19 +5723,17 @@ if (DormDone<1) ;後宅發現任務
 			Dorm_heart++
 		}
 		sleep 300
-		Dormcount++
-		if (Dormcount>15)
+		if (A_index>15)
 		{
 			LogShow("離開後宅。")
 			Dorm_Coin := 0
 			Dorm_heart := 0
-			Dormcount := 0
 			DormFoodDone := 0
 			DormDone := 1
 			Settimer, DormClock, -1800000 ;半小時檢查一次
 			C_Click(35, 86)
 			sleep 2000
-			Loop, 60
+			Loop, 30
 			{
 				if (Find(x, y, 0, 59, 91, 119, DormPage_in_Dorm))
 				{
@@ -6260,8 +6295,7 @@ shipsfull()
 				}
 			} until Find(x, y, 96, 32, 196, 92, SF_In_Dock)
 			shipcount := 0
-			sleep 500
-			Gosub, Anchorsettings
+			Gosub, Anchorsettings ;Get GUI settings again
 			sleep 500
 			Loop
 			{
@@ -6270,64 +6304,64 @@ shipsfull()
 					C_Click(1136, 64) ;開啟篩選
 					Loop
 					{
-						sleep 400
-						shipcount++
-						if (shipcount>200)
+						sleep 500
+						if (A_index>100)
 						{
 							LogShow("等待進入篩選清單的過程中發生錯誤")
 							StopAnchor := 1 ;不再出擊
 							return StopAnchor
 						}
-					} until Find(x, y, 32, 97, 132, 157, Dock_Sort)
+					} until Find(x, y, 23, 121, 123, 176, Dock_Sort)
 					sleep 1000
-					shipcount := 0
-					C_Click(502, 129) ;排序 等級
-					C_Click(363, 266) ;索引 全部
-					C_Click(363, 397)  ;陣營全 陣營
-					C_Click(363, 530)  ;稀有度 全部
+					C_Click(511, 156) ;排序 等級
+					C_Click(354, 230) ;索引 全部
+					C_Click(357, 362)  ;陣營全 陣營
+					C_Click(353, 497)  ;稀有度 全部
 					if (Index1)
-						C_Click(517, 264)
+						C_Click(510, 229)
 					if (Index2)
-						C_Click(666, 265)
+						C_Click(666, 229)
 					if (Index3)
-						C_Click(833, 265)
+						C_Click(833, 229)
 					if (Index4)
-						C_Click(991, 265)
+						C_Click(991, 229)
 					if (Index5)
-						C_Click(1134, 265)
+						C_Click(1134, 229)
 					if (Index6)
-						C_Click(348, 324)
+						C_Click(348, 292)
 					if (Index7)
-						C_Click(517, 324)
+						C_Click(517, 292)
 					if (Index8)
-						C_Click(666, 324)
+						C_Click(666, 292)
 					if (Index9)
-						C_Click(833, 324)
+						C_Click(833, 292)
 					if (Camp1)
-						C_Click(513, 397)
+						C_Click(513, 365)
 					if (Camp2)
-						C_Click(666, 397)
+						C_Click(666, 365)
 					if (Camp3)
-						C_Click(833, 397)
+						C_Click(833, 365)
 					if (Camp4)
-						C_Click(991, 397)
+						C_Click(991, 365)
 					if (Camp5)
-						C_Click(1134, 397)
+						C_Click(1134, 365)
 					if (Camp6)
-						C_Click(356, 457)
+						C_Click(356, 419)
 					if (Camp7)
-						C_Click(666, 457)
+						C_Click(666, 419)
 					if (Rarity1)
-						C_Click(513, 529)
+						C_Click(513, 497)
 					if (Rarity2)
-						C_Click(666, 529)
+						C_Click(666, 497)
 					if (Rarity3)
-						C_Click(833, 529)
+						C_Click(833, 497)
 					if (Rarity4)
-						C_Click(991, 529)
-					if (Find(x, y, 32, 97, 132, 157, Dock_Sort)) ;
+						C_Click(991, 497) ;注意 此為退役超稀有
+					if (Find(x, y, 23, 121, 123, 176, Dock_Sort))
 					{
-						if ((Rarity1) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_02_N.png", 40, 8, 445, 514, 576, 552)) or ((Rarity2) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_03_N.png", 40, 8, 605, 514, 732, 553)) or ((Rarity3) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_04_N.png", 40, 8, 763, 514, 891, 553))
+						if ((Rarity1) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_02_N.png", 40, 8, 445, 480, 576, 516)) 
+						or ((Rarity2) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_03_N.png", 40, 8, 605, 480, 732, 516)) 
+						or ((Rarity3) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_04_N.png", 40, 8, 763, 480, 891, 516))
 						{
 							LogShow("篩選腳色過程中出現出錯，強制停止1")
 							Loop
@@ -6336,16 +6370,9 @@ shipsfull()
 							}
 							return
 						}
-						if ((Rarity1) and !(DwmCheckcolor(473, 533, 4877733))) or ((Rarity2) and !(DwmCheckcolor(632, 530, 4876700))) or ((Rarity3) and !(DwmCheckcolor(790, 530, 4876709)))
-						{
-							LogShow("篩選腳色過程中出現出錯，強制停止01")
-							Loop
-							{
-								sleep 5000
-							}
-							return
-						}
-						if ((Rarity1) and !GdipImageSearch(x, y, "img/Dock/Dock_Rarity_02_Y.png", 40, 8, 453, 513, 571, 552)) or ((Rarity2) and !GdipImageSearch(x, y, "img/Dock/Dock_Rarity_03_Y.png", 40, 8, 608, 514, 731, 552)) or ((Rarity3) and !GdipImageSearch(x, y, "img/Dock/Dock_Rarity_04_Y.png", 40, 8, 766, 513, 887, 552))
+						if ((Rarity1) and !GdipImageSearch(x, y, "img/Dock/Dock_Rarity_02_Y.png", 40, 8, 453, 480, 571, 516)) 
+						or ((Rarity2) and !GdipImageSearch(x, y, "img/Dock/Dock_Rarity_03_Y.png", 40, 8, 608, 480, 731, 516)) 
+						or ((Rarity3) and !GdipImageSearch(x, y, "img/Dock/Dock_Rarity_04_Y.png", 40, 8, 766, 480, 887, 516))
 						{
 							LogShow("篩選腳色過程中出現出錯，強制停止2")
 							Loop
@@ -6354,16 +6381,9 @@ shipsfull()
 							}
 							return
 						}
-						if ((Rarity1) and DwmCheckcolor(476, 529, 7043468)) or ((Rarity2) and DwmCheckcolor(633, 529, 7042436)) or ((Rarity3) and DwmCheckcolor(789, 531, 7043468))
-						{
-							LogShow("篩選腳色過程中出現出錯，強制停止02")
-							Loop
-							{
-								sleep 5000
-							}
-							return
-						}
-						if ((Rarity1) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_02_Y.png", 40, 8, 453, 513, 571, 552)) or ((Rarity2) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_03_Y.png", 40, 8, 608, 514, 731, 552)) or ((Rarity3) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_04_Y.png", 40, 8, 766, 513, 887, 552))
+						if ((Rarity1) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_02_Y.png", 40, 8, 453, 480, 571, 516)) 
+						or ((Rarity2) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_03_Y.png", 40, 8, 608, 480, 731, 516)) 
+						or ((Rarity3) and GdipImageSearch(x, y, "img/Dock/Dock_Rarity_04_Y.png", 40, 8, 766, 480, 887, 516))
 						{
 							C_Click(796, 702) ;點擊確定
 						}
@@ -6898,7 +6918,7 @@ Battle()
 			}
 			if (Retreat_LowHp and !StopRetreat_LowHp) ;旗艦HP過低撤退
 			{
-				Hp_Variation := 30
+				Hp_Variation := 25
 				if (OriginalHP<1) ;先檢查原本HP剩多少
 				{
 					DetectHP_Pos := [10, 410, 105, 490]
@@ -6967,7 +6987,7 @@ Battle()
 							if (debugmode)
 								LogShow("已交換隊伍，停止撤退！")
 						}
-						if ((OriginalHP-NowHP)>=Retreat_LowHpBar and NotRetreat<1) ;HP過低撤退
+						if ((OriginalHP-NowHP)>=Retreat_LowHpBar and NotRetreat<1 and NowHP!=0) ;HP過低撤退
 						{
 							SufferHP := OriginalHP-NowHP
 							Message = 目前HP: %NowHP%`%，消耗HP: %SufferHP%`%。
@@ -7052,7 +7072,7 @@ Battle()
 			if (!(Retreat_LowHp) and Retreat_LowHp2) ;旗艦HP過低撤退
 			{
 				DetectHP_Pos := [10, 410, 105, 490]
-				Hp_Variation := 30
+				Hp_Variation := 25
 				if (GdipImageSearch(x, y, "img/battle/LowHP.png", Hp_Variation, 8, DetectHP_Pos[1], DetectHP_Pos[2], DetectHP_Pos[3], DetectHP_Pos[4]))
 				{
 					NowHP := Ceil((x-10)/85*100)
@@ -7425,12 +7445,6 @@ MinMax(type := "max", values*) {
 			x .= (k = values.MaxIndex() ? v : v ";"), ++c, y += v 
 	Sort, x, % "d`; N" (type = "max" ? " R" : "")
 	return type = "avg" ? y/c : SubStr(x, 1, InStr(x, ";") - 1)
-}
-
-WM_HELP(){
-	Run, https://www.reddit.com/r/RagnarokMobile/comments/e6cccx/tech_support_ldplayer_update_added_shady/
-	sleep 1000
-	Run, https://www.ptt.cc/bbs/AzurLane/M.1575711622.A.AF3.html
 }
 
 Isbetween(Var, Min, Max) {
@@ -7991,7 +8005,7 @@ Update_help() {
 ;~ F3::
 ;~ MapX1 := 10, MapY1 := 100, MapX2 := 1261, MapY2 := 680
 ;~ Random, SearchDirection, 1, 8
-;~ if (GdipImageSearch(x, y, "img/SupplyStore/Part_Anti_Aircraft.png", 70, SearchDirection, MapX1, MapY1, MapX2, MapY2))
+;~ if (GdipImageSearch(x, y, "img/SubChapter/Bullet_None.png", 8, SearchDirection, MapX1, MapY1, MapX2, MapY2))
 ;~ {
 ;~ WinActivate, %title%
 ;~ mousemove, %x%, %y%
