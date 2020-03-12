@@ -1693,32 +1693,14 @@ Loop, 3
 								if (Check71=Check72 and Check71=Check73)
 								{
 									Checkzz++
-									if (Checkzz=9)
+									if (Checkzz>=9)
 									{
 										LogShow("畫面靜止，嘗試返回首頁")
 										C_Click(1271, 70)
-										sleep 2000
+										sleep 5000
 										if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation))
 										{
-											C_Click(52, 88)
-											sleep 5000
-											if !(Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation))
-											{
-												C_Click(52, 88)
-												sleep 1500
-												LogShow("成功返回首頁")
-											}
-											else
-											{
-												Capture()
-												LogShow("===模擬器當機或輔助卡住，自動重啟===")
-												EmulatorCrushCheckCount := 0
-												iniwrite, "===模擬器當機或輔助卡住，自動重啟===", %SettingName%, OtherSub, AutostartMessage
-												iniwrite, 1, %SettingName%, OtherSub, Autostart
-												runwait, %Consolefile% quit --index %emulatoradb% , %ldplayer%, Hide
-												sleep 10000
-												reload
-											}
+											LogShow("成功返回首頁")
 										}
 										else
 										{
