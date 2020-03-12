@@ -5554,13 +5554,13 @@ if (AcademyDone<1)
 			AcademyDone := 1
 			Settimer, AcademyClock, -900000 ;15分鐘後再開始檢查
 			C_Click(38, 92)
-			sleep 2000
+			sleep 5000
 			Loop, 60
 			{
 				if (Find(x, y, 86, 34, 186, 94, AcademyPage_Academy))
 				{
 					C_Click(38, 92)
-					sleep 3000
+					sleep 5000
 				}
 				else if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor))
 				{
@@ -5744,7 +5744,7 @@ if (DormDone<1) ;後宅發現任務
 			DormDone := 1
 			Settimer, DormClock, -1800000 ;半小時檢查一次
 			C_Click(35, 86)
-			sleep 2000
+			sleep 5000
 			Loop, 30
 			{
 				if (Find(x, y, 0, 59, 91, 119, DormPage_in_Dorm))
