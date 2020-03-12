@@ -48,6 +48,22 @@ theBox_T4 := "|<>*143$32.w3z4Dz0zk3zkDw0zM3zkDq0zz1xkTzqTC3zw7lszz3w7bzsz0Tzzjk1
 
 theCube2 := "|<>*199$71.zzUQ000zUzzzzzk0000TUzzzzzw0000x1zzzzzw0000Rlzzzyzs0000PXzzzzjU0000b7zzzzz00002Dbzzzzy00000Tfzzzww00003zDzzzts00001yTzzzhU00007wzzzz+00000DtzzzyQ000007Hzzzys00000Cbzzzxs00000TDzzzvk00000yzzzznU00001zzzzzb000001zzzzzC000000TzvzuQ000000DzrzyM0000007zZzws0000003y/zss0000001wTzcs0000000MrzN000000003"
 
+ClassRoomDone := "|<>*177$14.3s1z0zsTzDzvzzzDzXzszyDzXzszyDzXzszyDznzzzzDzXzwzzzc"
+
+ClassRoomLvUp := "|<>*198$29.zw33zzU27zw1wDz0DsTtwTkzzszVzzlz3zzXy7zz7wDzyDsTzwTktzszVV00001z1y7zy7wDzwDsTzsTkzzkzVzzXz3zy7y7zwDwDzszsTzVzkzz7zVzwTz3z"
+
+ClassRoomEnd := "|<>*201$28.zz7zTzwTwE0000zy777zwTzzzlzztz7wzU001yDly7sz7szXwTXyDlyDsz7szXwTXy000Dsw3szXkLrzy1Dzzk6Tzy4QTzklkzyD7UzlwTUyDlz0Xz7y2"
+
+ClassRoomEndConfirm :="|<>*186$31.xzkTVw0000MDzzs07zzw43zzsC3zzsD1zzs7l0003zzsDzzzw7zzzy3zzwD1xzy1UwTz1kQ3zUs01zkw7zzsS3zzsD1zzw3Uzzy0kTzy60Dzz7U007Xk003Xw003XzU01k"
+
+ClassRoomBegin := "|<>*211$31.wDz1zy7zVzz7zVzz3bltzV1lwS00Nz3ssNzksQ9zsQC800674073730TVXVbztVkzzzlsxztswS00QQD2wD6DXy7k7lz3w3szVz0wTkzUCDsTU37wDl1Xy7lklz3lwM01k"
+
+ClassRoomAddS := "|<>*165$24.Dk00Tk00ENzzsTU3U1U300U300V3skXXskXXMkXXMkXXEkXXEkXXEkXXkkXXkkXXlkXXVkXXVkXXXkV37UU361U3C1UCPzzsny00U"
+
+ClassRoomAddS2 := "|<>*211$23.0Tw00zs01zk03zU07z0Tzzzzzzzzzzzzzzzzzzzzzzzzzzzzzy0zs01zk03zU07z00Dy00Tw1"
+
+ClassRoomDock := "|<>*154$26.zzzzz3zzzUy07U1U1s0MMS7667UFVVs4MMS04C3U03UMQ1w400zz01zzk0E0C7403UF00s4EwC04D3W13kswEwCD4D33l3klkE0Qw407T303s"
+
 
 global Academy_BTN_Confirm
 
@@ -111,13 +127,12 @@ CommisionDone := "|<>*172$10.zzzy7sTVy7sTVy7sTVzDzzvy7sTzzzU" ;主線軍事委�
 Commision_Delegation := "|<>*145$53.zzztzbzzzU003yDzkT0007yDs0S000TwS01zz1zzsw0zU000A00Vz0000M0D3y0000zzy7zU00DzzwDz1UUTU3sTs71UT07kw0S3UTzzU00wDUzzk01kTw7s000A0001k10Ds0003zzsTk000707kzw7y3y0DVzs7w7w0T3zs7UDssy7bs20zllwD7s03zXXsSA000T07kw0000S0Dk00Dw0w0TU3"
 
 
-Delegation_Done := "|<>*202$50.zszzzzs3zy7zzzz4DzlxzzzlXrwSDzzwQMzDVzkS60DzsTw0013zqTz3wTlzsTzkz6TzzzzwAFVzzzzz000TzzXzkk0C000TwAM3y27zz361zVVzzklUTsMTzwQQCy67rz071jXVtzlVUHksSTwsk0wS03yDskCDU0zbwS2Dw0TvyTkDzzzxzzzM"
-
+Delegation_Done := "|<>*203$21.zy9zzl3zyATzllVwA4001VyDwDlbVWAA00VlW0QAM3VX0wQM7XXVo0QCX70Ysk07wM1zDUTny7zzxU"
 Delegation_Incredible := "|<>*162$69.zyTbnw0z0Tk7znwSTU7s1y0wyTVnwwzDDns3nwWTbzs1y3wSTa3wzz0DnzrnwsTbbtbyTzyTbXw0zCTk7znwzTk7tty0U"  ;出現委託成功S頁面
 
 Delegation_Perfect := "|<>*158$70.0TUDk3w0w0y00y0z0Dk7k3s3ntzwwzDzDzb0DUzk3w7w7yQ1y3z0DkTnTtnztzwnzDzDzbDzU7nXwzw0y0zy0zD7nzk3w8"
 
-Delegation_idle := "|<>*158$17.C9kAFUMX0101WA34M68kDzUNn0lW1XA36M6AkAtUNn0b01S83ztU"
+Delegation_idle := "|<>*164$17.CNkAFUMX0101WA34M68kDzUNn0lW1XA36M6AkAtUNn0r01SM3ztU"
 
 DelegationPage_in_Delegation := "|<>*152$25.k001s000w000zzUzw000200000000Q003y311w3UkA3kQ23sT1sDy3U000000000003UzkTkDsDw3kDz0E7zk0Dy000A00020zw1U"
 
@@ -404,6 +419,13 @@ Map_ChapterEvent6_1 := "|<>*137$49.UQDzzzzs067zzzzw01zzzzzy0EV040s708EU2081U7sE1
 Map_ChapterEvent6_2 := "|<>*136$45.kDz3zkzw0zsTy7z07zzzzzsEk8M66122120EU0EE8120E22108E20TkMEy4D3y721kUMTksM6612273UEs0EEsF24E26728EW00ksF24EU6720EU61ksM661U"
 
 Map_ChapterEvent6_3 := "|<>*148$68.0TzzzVzsTzzk1zzzsTy7zzw0Tzzzzzzzzz270w3VUM130kVU60ME20EU48M1U60EU4802248EU481240UU24M0y4FU0880Vy43V4M02608TVUME600VVa7sQ241VY8MEV24EV0ME2648FU48E6401V20ME261U00M1U640VUs10DUw3VUMMDUs"
+
+Map_ChapterEventglorySP1 := "|<>*153$26.UQ1y030D00E1024800V2407kVk0w8Q870730k3ks43w1V3z08Ezk24Dw013z00kzkkQDw8"
+Map_ChapterEventglorySP2 := "|<>*146$29.UQ1s60M1U40E108EV2A0V24M1y4AV0w8T30s0w70k3sT0UTVlV3z3V27wD24DkS08TU40kz0A1Vy0M"
+Map_ChapterEventglorySP3 := "|<>*149$29.UQ1s60M1U40E100EV240V2481y4Dk0w8S30s0w70k3s70UTw1V3w8127sE24DkU08TU00kz0A3Vz0s"
+
+Map_Special := "|<>*165$36.swTzs7UU7k07UU3k01UQDss1UwTs378U1s37MU1k60szzm00s03k00003sM10z3wM1sX7wM1sn7sn0sl7tX4sy7nbCsyDrzDU"
+
 
 
 theWay_TooFar := "|<>*149$5.n26Tzn000000000004Bk"

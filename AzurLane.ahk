@@ -186,7 +186,7 @@ Tab1_Y += 5
 Gui, Add, text, x180 y%Tab1_Y% w20 h20  , 第
 Tab1_Y -= 5
 
-AnchorChapterList = 1|2|3|4|5|6|7|8|9|紅染1|紅染2|S.P.|異色1|異色2|墜落1|墜落2|
+AnchorChapterList = 1|2|3|4|5|6|7|8|9|紅染1|紅染2|S.P.|異色1|異色2|墜落1|墜落2|光榮1|
 StringReplace, AnchorChapterListSR, AnchorChapterList,%CH_AnchorChapter%,%CH_AnchorChapter%|
 Gui, Add, DropDownList,  x200 y%Tab1_Y% w60 gAnchorsettings vAnchorChapter, %AnchorChapterListSR%
 
@@ -448,8 +448,8 @@ Gui, Add, DropDownList, x+5 y%Tab2_Y% w40 h200 gAnchorsettings vOperation_OnlyNu
 Tab2_Y+=5
 Gui, Add, Text, x+10 y%Tab2_Y% w20 h20, 場
 Tab2_Y-=3
-;~ IniRead, Operation_ReLogin, %SettingName%, Battle, Operation_ReLogin, 0
-;~ Gui, Add, CheckBox, x+10 y%Tab2_Y% w120 h20 gAnchorsettings vOperation_ReLogin checked%Operation_ReLogin% , 執行前先重登
+IniRead, Operation_ReLogin, %SettingName%, Battle, Operation_ReLogin, 0
+Gui, Add, CheckBox, x+10 y%Tab2_Y% w120 h20 gAnchorsettings vOperation_ReLogin checked%Operation_ReLogin% , 執行前先重登
 
 
 Tab2_Y+=25
@@ -1088,6 +1088,7 @@ Guicontrolget, DailyHardMap2
 Guicontrolget, DailyHardMap3
 Guicontrolget, OperationSub
 Guicontrolget, Operationenemy
+Guicontrolget, Operation_ReLogin
 Guicontrolget, Leave_Operatio
 Guicontrolget, OperatioMyHpBar
 Guicontrolget, OperatioMyHpBarUpdate
@@ -1174,6 +1175,7 @@ Iniwrite, %DailyGoalGreenAction%, %SettingName%, Battle, DailyGoalGreenAction
 Iniwrite, %DailyGoalBlue%, %SettingName%, Battle, DailyGoalBlue
 Iniwrite, %DailyGoalBlueAction%, %SettingName%, Battle, DailyGoalBlueAction
 Iniwrite, %OperationSub%, %SettingName%, Battle, OperationSub ;自動執行演習
+Iniwrite, %Operation_ReLogin%, %SettingName%, Battle, Operation_ReLogin
 Iniwrite, %Operationenemy%, %SettingName%, Battle, Operationenemy
 Iniwrite, %Leave_Operatio%, %SettingName%, Battle, Leave_Operatio
 Iniwrite, %OperatioMyHpBar%, %SettingName%, Battle, OperatioMyHpBar ;演習時的我方血量
@@ -1796,30 +1798,6 @@ else if LDplayerCheck
 				GotoOperation := 1
 				ResetOperationDone := 1
 				Settimer, ResetOperationClock, -121000
-				;~ if (Operation_ReLogin) {
-					;~ LogShow("演習前重登。")
-					;~ runwait, %Consolefile% killapp --index %emulatoradb% --packagename "com.hkmanjuu.azurlane.gp" , %ldplayer%, Hide
-					;~ Loop
-					;~ {
-						;~ if (Find(x, y, 389, 85, 489, 145, LDDesktop))
-							;~ break
-						;~ sleep 500
-					;~ }
-					;~ sleep 1500
-					;~ runwait, %Consolefile% runapp --index %emulatoradb% --packagename "com.hkmanjuu.azurlane.gp" , %ldplayer%, Hide
-					;~ Loop
-					;~ {
-						;~ if (Find(x, y, 1197, 704, 1297, 764, CRIWare)) ;登入伺服器選擇頁面
-						;~ {
-							;~ sleep 3000
-							;~ AC_Click( 231, 70, 1051, 507) ;隨機點擊登入
-							;~ sleep 3000
-							;~ if !(Find(x, y, 1197, 704, 1297, 764, CRIWare))
-								;~ break
-						;~ }
-						;~ sleep 500
-					;~ }
-				;~ }
 				if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation))
 				{
 					C_Click(1080, 403)
@@ -2222,7 +2200,7 @@ if (Find(x, y, 1018, 486, 1118, 546, GoMatchingGame)) {
 return
 
 AnchorSub: ;出擊
-if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor) and StopAnchor<1 and AnchorMode!="停用")
+if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor) and ((StopAnchor<1 and AnchorMode!="停用") or IsOperation_ReLogin))
 {
 	Random, x, 1025, 1145
 	Random, y, 356, 453
@@ -2373,27 +2351,27 @@ if (Find(x, y, 164, 42, 264, 102, Formation_Upp) and Find(x, y, 0, 587, 86, 647,
 }
 if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 {	
-	if (GotoOperation=1 and OperationSub)
+	if (GotoOperation and OperationSub)
 	{
 		LogShow("準備開始演習，返回上一頁")
 		sleep 300
 		C_Click(56, 86)
 		return
 	}
-	if (StopAnchor=1)
+	if (StopAnchor)
 	{
 		LogShow("停止出擊中，返回上一頁")
 		sleep 500
 		C_Click(56, 86)
 		return
 	}
-	if (InMap=1)
+	if (InMap)
 	{
 		InMap := 0
 		AC_Click(1164, 701, 1246, 730) ;心情低落後返回地圖 不再偵查 直接迎擊
 		return
 	}
-	if (IsDetect<1)
+	if !(IsDetect)
 		LogShow("偵查中。")
 	sleep 1500
 	BOSSICO := "img/SubChapter/targetboss_1.png"
@@ -2672,7 +2650,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 					TargetFailed4 := 1
 					Loop, 15
 					{
-						xx := x
+						xx := x+20
 						yy := y
 						if (Find(n, m, 750, 682, 850, 742, Battle_Map) and xx>147 and yy>200 and xx<MapX2 and yy<MapY2) 
 						{
@@ -3537,7 +3515,7 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 			sleep 500
 		}
 	}
-	if (DailyGoalSub and DailyDone<1)
+	if (DailyGoalSub and !DailyDone)
 	{
 		iniread, Yesterday, %SettingName%, Battle, Yesterday
 		FormatTime, Today, ,dd
@@ -3600,7 +3578,7 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 			DailyDone := 1
 		}
 	}
-	if (OperationSub and OperationDone<1)
+	if (OperationSub and !OperationDone)
 	{
 		iniread, OperationYesterday, %SettingName%, Battle, OperationYesterday
 		FormatTime, OperationToday, ,dd
@@ -3614,6 +3592,24 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 		}
 		else
 		{
+			if (Operation_ReLogin and !IsOperation_ReLogin) 
+			{
+				LogShow("演習前重登。")
+				runwait, %Consolefile% killapp --index %emulatoradb% --packagename "com.hkmanjuu.azurlane.gp" , %ldplayer%, Hide
+				Loop
+				{
+					if (Find(x, y, 389, 85, 489, 145, LDDesktop))
+						break
+				}
+				runwait, %Consolefile% runapp --index %emulatoradb% --packagename "com.hkmanjuu.azurlane.gp" , %ldplayer%, Hide
+				IsOperation_ReLogin := 1
+				sleep 5000
+				return
+			}
+			else if (Operation_ReLogin and IsOperation_ReLogin)
+			{
+				IsOperation_ReLogin := 0
+			}
 			if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor) and Find(x, y, 1078, 663, 1178, 723, BTN_Exercise))
 			{ ;如果在出擊頁面檢查到演習還沒執行
 				LogShow("自動執行演習！")
@@ -3710,8 +3706,9 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 	ChapterEvent4 := if (GdipImageSearch(x, y, "img/Number/Number_1.png", 60, 8, 359, 292, 380, 322)) ? 1 : 0 ;18 活動 異色格2 
 	ChapterEvent5 := Find(x, y, 449, 273, 549, 333, Map_ChapterEvent5_1) ;19墜落之翼 A-1
 	ChapterEvent6 := Find(x, y, 420, 431, 520, 491, Map_ChapterEvent6_1)  ;20墜落之翼 D-1
+	ChapterEventglory := Find(x, y, 287, 319, 387, 374, Map_ChapterEventglorySP1) ;21 光榮Sp
 	ChapterFailed := 1
-	array := [Chapter1, Chapter2,Chapter3, Chapter4, Chapter5, Chapter6, Chapter7, Chapter8, Chapter9, Chapter10, Chapter11, Chapter12, Chapter13, ChapterEvent1,ChapterEvent2, ChapterEventSP, ChapterEvent3, ChapterEvent4, ChapterEvent5, ChapterEvent6, ChapterFailed]
+	array := [Chapter1, Chapter2,Chapter3, Chapter4, Chapter5, Chapter6, Chapter7, Chapter8, Chapter9, Chapter10, Chapter11, Chapter12, Chapter13, ChapterEvent1,ChapterEvent2, ChapterEventSP, ChapterEvent3, ChapterEvent4, ChapterEvent5, ChapterEvent6, ChapterEventglory, ChapterFailed]
 	Chapter := 0
 	Loop % array.MaxIndex()
 	{
@@ -3726,7 +3723,10 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 	{
 		;~ LogShow("畫面已經在主線地圖") 
 	}
-	else if (Chapter=14 or Chapter=15 or Chapter=17 or Chapter=18 or Chapter=19 or Chapter=20) and ((AnchorChapter="紅染1" or AnchorChapter="紅染2") or (AnchorChapter="異色1" or AnchorChapter="異色2") or (AnchorChapter="墜落1" or AnchorChapter="墜落2"))
+	else if (Chapter=14 or Chapter=15 or Chapter=17 or Chapter=18 or Chapter=19 or Chapter=20) 
+	and ((AnchorChapter="紅染1" or AnchorChapter="紅染2") 
+	or (AnchorChapter="異色1" or AnchorChapter="異色2") 
+	or (AnchorChapter="墜落1" or AnchorChapter="墜落2"))
 	{
 		BacktoNormalMap++
 		if ((OperationSub and OperationDone<1) or (DailyGoalSub and DailyDone<1) or (BacktoNormalMap>2))
@@ -3738,7 +3738,7 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 			return
 		}
 	}
-	else if (Chapter=16) and (AnchorChapter="S.P.")
+	else if (Chapter=16 or Chapter=21) and (AnchorChapter="S.P." AnchorChapter="光榮1")
 	{
 		;~ LogShow("畫面已經在S.P.地圖") 
 	}
@@ -3753,7 +3753,7 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 		C_Click(60, 90)
 		return
 	}
-	else if ((Chapter=14 or Chapter=15 or Chapter=16 or Chapter=17 or Chapter=18 or Chapter=19 or Chapter=20) and (AnchorChapter is number))
+	else if ((Chapter=14 or Chapter=15 or Chapter=16 or Chapter=17 or Chapter=18 or Chapter=19 or Chapter=20 or Chapter=21) and (AnchorChapter>=1 and AnchorChapter<=14))
 	{
 		LogShow("位於活動地圖，返回主線。")
 		C_Click(60, 90)
@@ -3785,261 +3785,264 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 			}
 		}
 	}
-	sleep 250
-	SelectMode()
-	sleep 250
 	Chaptermessage = —選擇關卡： %AnchorMode% 第 %AnchorChapter% 章 第 %AnchorChapter2% 節—
 	LogShow(Chaptermessage)
-	if (AnchorChapter=1 and AnchorChapter2=1) ; 選擇關卡 1-1
+	if (AnchorChapter>=1 and AnchorChapter<=14)
 	{
-		if (DwmCheckcolor(220, 527, 16777215))
+		sleep 250
+		SelectMode()
+		sleep 250
+		if (AnchorChapter=1 and AnchorChapter2=1) ; 選擇關卡 1-1
 		{
-			C_Click(221,526)
+			if (DwmCheckcolor(220, 527, 16777215))
+			{
+				C_Click(221,526)
+			}
 		}
-	}
-	else if (AnchorChapter=1 and AnchorChapter2=2) ; 選擇關卡 1-2
-	{
-		if (DwmCheckcolor(509, 341, 16777215))
+		else if (AnchorChapter=1 and AnchorChapter2=2) ; 選擇關卡 1-2
 		{
-			C_Click(510,342)
+			if (DwmCheckcolor(509, 341, 16777215))
+			{
+				C_Click(510,342)
+			}
 		}
-	}
-	else if (AnchorChapter=1 and AnchorChapter2=3) ; 選擇關卡 1-3
-	{
-		if (DwmCheckcolor(712, 599, 16777215))
+		else if (AnchorChapter=1 and AnchorChapter2=3) ; 選擇關卡 1-3
 		{
-			C_Click(713,600)
+			if (DwmCheckcolor(712, 599, 16777215))
+			{
+				C_Click(713,600)
+			}
 		}
-	}
-	else if (AnchorChapter=1 and AnchorChapter2=4) ; 選擇關卡 1-4
-	{
-		if (DwmCheckcolor(861, 246, 16777215))
+		else if (AnchorChapter=1 and AnchorChapter2=4) ; 選擇關卡 1-4
 		{
-			C_Click(862,247)
+			if (DwmCheckcolor(861, 246, 16777215))
+			{
+				C_Click(862,247)
+			}
 		}
-	}
-	else if (AnchorChapter=2 and AnchorChapter2=1) ; 選擇關卡 2-1
-	{
-		if (DwmCheckcolor(867, 531, 16777215))
+		else if (AnchorChapter=2 and AnchorChapter2=1) ; 選擇關卡 2-1
 		{
-			C_Click(868,530)
+			if (DwmCheckcolor(867, 531, 16777215))
+			{
+				C_Click(868,530)
+			}
 		}
-	}
-	else if (AnchorChapter=2 and AnchorChapter2=2) ; 選擇關卡 2-2
-	{
-		if (DwmCheckcolor(802, 261, 16777215))
+		else if (AnchorChapter=2 and AnchorChapter2=2) ; 選擇關卡 2-2
 		{
-			C_Click(803,262)
+			if (DwmCheckcolor(802, 261, 16777215))
+			{
+				C_Click(803,262)
+			}
 		}
-	}
-	else if (AnchorChapter=2 and AnchorChapter2=3) ; 選擇關卡 2-3
-	{
-		if (DwmCheckcolor(341, 345, 16777215))
+		else if (AnchorChapter=2 and AnchorChapter2=3) ; 選擇關卡 2-3
 		{
-			C_Click(341,346)
+			if (DwmCheckcolor(341, 345, 16777215))
+			{
+				C_Click(341,346)
+			}
 		}
-	}
-	else if (AnchorChapter=2 and AnchorChapter2=4) ; 選擇關卡 2-4
-	{
-		if (DwmCheckcolor(437, 619, 16777215))
+		else if (AnchorChapter=2 and AnchorChapter2=4) ; 選擇關卡 2-4
 		{
-			C_Click(438,620)
+			if (DwmCheckcolor(437, 619, 16777215))
+			{
+				C_Click(438,620)
+			}
 		}
-	}
-	else if (AnchorChapter=3 and AnchorChapter2=1) ; 選擇關卡3-1
-	{
-		if (DwmCheckcolor(476, 292, 16777215))
+		else if (AnchorChapter=3 and AnchorChapter2=1) ; 選擇關卡3-1
 		{
-			C_Click(477,293)
+			if (DwmCheckcolor(476, 292, 16777215))
+			{
+				C_Click(477,293)
+			}
 		}
-	}
-	else if (AnchorChapter=3 and AnchorChapter2=2) ; 選擇關卡3-2
-	{
-		if (DwmCheckcolor(304, 572, 16777215))
+		else if (AnchorChapter=3 and AnchorChapter2=2) ; 選擇關卡3-2
 		{
-			C_Click(305,573)
+			if (DwmCheckcolor(304, 572, 16777215))
+			{
+				C_Click(305,573)
+			}
 		}
-	}
-	else if (AnchorChapter=3 and AnchorChapter2=3) ; 選擇關卡3-3
-	{
-		if (DwmCheckcolor(866, 208, 16777215))
+		else if (AnchorChapter=3 and AnchorChapter2=3) ; 選擇關卡3-3
 		{
-			C_Click(867,209)
+			if (DwmCheckcolor(866, 208, 16777215))
+			{
+				C_Click(867,209)
+			}
 		}
-	}
-	else if (AnchorChapter=3 and AnchorChapter2=4) ; 選擇關卡3-4
-	{
-		if (DwmCheckcolor(690, 432, 16777215))
+		else if (AnchorChapter=3 and AnchorChapter2=4) ; 選擇關卡3-4
 		{
-			C_Click(691,433)
+			if (DwmCheckcolor(690, 432, 16777215))
+			{
+				C_Click(691,433)
+			}
 		}
-	}
-	else if (AnchorChapter=4 and AnchorChapter2=1) ; 選擇關卡4-1
-	{
-		if (DwmCheckcolor(311, 377, 16777215))
+		else if (AnchorChapter=4 and AnchorChapter2=1) ; 選擇關卡4-1
 		{
-			C_Click(312,378)
+			if (DwmCheckcolor(311, 377, 16777215))
+			{
+				C_Click(312,378)
+			}
 		}
-	}
-	else if (AnchorChapter=4 and AnchorChapter2=2) ; 選擇關卡4-2
-	{
-		if (DwmCheckcolor(476, 540, 16777215))
+		else if (AnchorChapter=4 and AnchorChapter2=2) ; 選擇關卡4-2
 		{
-			C_Click(477,541)
+			if (DwmCheckcolor(476, 540, 16777215))
+			{
+				C_Click(477,541)
+			}
 		}
-	}
-	else if (AnchorChapter=4 and AnchorChapter2=3) ; 選擇關卡4-3
-	{
-		if (DwmCheckcolor(878, 618, 16777215))
+		else if (AnchorChapter=4 and AnchorChapter2=3) ; 選擇關卡4-3
 		{
-			C_Click(879,619)
+			if (DwmCheckcolor(878, 618, 16777215))
+			{
+				C_Click(879,619)
+			}
 		}
-	}
-	else if (AnchorChapter=4 and AnchorChapter2=4) ; 選擇關卡4-4
-	{
-		if (DwmCheckcolor(855, 360, 16777215))
+		else if (AnchorChapter=4 and AnchorChapter2=4) ; 選擇關卡4-4
 		{
-			C_Click(856,361)
+			if (DwmCheckcolor(855, 360, 16777215))
+			{
+				C_Click(856,361)
+			}
 		}
-	}
-	else if (AnchorChapter=5 and AnchorChapter2=1) ; 選擇關卡5-1
-	{
-		if (DwmCheckcolor(315, 437, 16777215))
+		else if (AnchorChapter=5 and AnchorChapter2=1) ; 選擇關卡5-1
 		{
-			C_Click(516,438)
+			if (DwmCheckcolor(315, 437, 16777215))
+			{
+				C_Click(516,438)
+			}
 		}
-	}
-	else if (AnchorChapter=5 and AnchorChapter2=2) ; 選擇關卡5-2
-	{
-		if (DwmCheckcolor(906, 607, 16777215))
+		else if (AnchorChapter=5 and AnchorChapter2=2) ; 選擇關卡5-2
 		{
-		C_Click(907,608)
+			if (DwmCheckcolor(906, 607, 16777215))
+			{
+			C_Click(907,608)
+			}
 		}
-	}
-	else if (AnchorChapter=5 and AnchorChapter2=3) ; 選擇關卡5-3
-	{
-		if (DwmCheckcolor(788, 435, 16777215))
+		else if (AnchorChapter=5 and AnchorChapter2=3) ; 選擇關卡5-3
 		{
-			C_Click(789,436)
+			if (DwmCheckcolor(788, 435, 16777215))
+			{
+				C_Click(789,436)
+			}
 		}
-	}
-	else if (AnchorChapter=5 and AnchorChapter2=4) ; 選擇關卡5-4
-	{
-		if (DwmCheckcolor(642, 284, 16777215))
+		else if (AnchorChapter=5 and AnchorChapter2=4) ; 選擇關卡5-4
 		{
-			C_Click(623,285)
+			if (DwmCheckcolor(642, 284, 16777215))
+			{
+				C_Click(623,285)
+			}
 		}
-	}
-	else if (AnchorChapter=6 and AnchorChapter2=1) ; 選擇關卡6-1
-	{
-		if (DwmCheckcolor(965, 573, 16777215))
+		else if (AnchorChapter=6 and AnchorChapter2=1) ; 選擇關卡6-1
 		{
-			C_Click(966,574)
+			if (DwmCheckcolor(965, 573, 16777215))
+			{
+				C_Click(966,574)
+			}
 		}
-	}
-	else if (AnchorChapter=6 and AnchorChapter2=2) ; 選擇關卡6-2
-	{
-		if (DwmCheckcolor(777, 416, 16777215))
+		else if (AnchorChapter=6 and AnchorChapter2=2) ; 選擇關卡6-2
 		{
-			C_Click(778,417)
+			if (DwmCheckcolor(777, 416, 16777215))
+			{
+				C_Click(778,417)
+			}
 		}
-	}
-	else if (AnchorChapter=6 and AnchorChapter2=3) ; 選擇關卡6-3
-	{
-		if (DwmCheckcolor(477, 289, 16777215))
+		else if (AnchorChapter=6 and AnchorChapter2=3) ; 選擇關卡6-3
 		{
-			C_Click(478,290)
+			if (DwmCheckcolor(477, 289, 16777215))
+			{
+				C_Click(478,290)
+			}
 		}
-	}
-	else if (AnchorChapter=6 and AnchorChapter2=4) ; 選擇關卡6-4
-	{
-		if (DwmCheckcolor(373, 498, 16777215))
+		else if (AnchorChapter=6 and AnchorChapter2=4) ; 選擇關卡6-4
 		{
-			C_Click(374,499)
+			if (DwmCheckcolor(373, 498, 16777215))
+			{
+				C_Click(374,499)
+			}
 		}
-	}
-	else if (AnchorChapter=7 and AnchorChapter2=1) ; 選擇關卡7-1
-	{
-		if (DwmCheckcolor(279, 558, 16777215))
+		else if (AnchorChapter=7 and AnchorChapter2=1) ; 選擇關卡7-1
 		{
-			C_Click(280,559)
+			if (DwmCheckcolor(279, 558, 16777215))
+			{
+				C_Click(280,559)
+			}
 		}
-	}
-	else if (AnchorChapter=7 and AnchorChapter2=2) ; 選擇關卡7-2
-	{
-		if (DwmCheckcolor(533, 255, 16777215))
+		else if (AnchorChapter=7 and AnchorChapter2=2) ; 選擇關卡7-2
 		{
-			C_Click(534,256)
+			if (DwmCheckcolor(533, 255, 16777215))
+			{
+				C_Click(534,256)
+			}
 		}
-	}
-	else if (AnchorChapter=7 and AnchorChapter2=3) ; 選擇關卡7-3
-	{
-		if (DwmCheckcolor(875, 356, 16777215))
+		else if (AnchorChapter=7 and AnchorChapter2=3) ; 選擇關卡7-3
 		{
-			C_Click(876,357)
+			if (DwmCheckcolor(875, 356, 16777215))
+			{
+				C_Click(876,357)
+			}
 		}
-	}
-	else if (AnchorChapter=7 and AnchorChapter2=4) ; 選擇關卡7-4
-	{
-		if (DwmCheckcolor(1018, 521, 16777215))
+		else if (AnchorChapter=7 and AnchorChapter2=4) ; 選擇關卡7-4
 		{
-			C_Click(1019,522)
+			if (DwmCheckcolor(1018, 521, 16777215))
+			{
+				C_Click(1019,522)
+			}
 		}
-	}
-	else if (AnchorChapter=8 and AnchorChapter2=1) ; 選擇關卡8-1
-	{
-		if (DwmCheckcolor(623, 259, 16777215))
+		else if (AnchorChapter=8 and AnchorChapter2=1) ; 選擇關卡8-1
 		{
-			C_Click(624,259)
+			if (DwmCheckcolor(623, 259, 16777215))
+			{
+				C_Click(624,259)
+			}
 		}
-	}
-	else if (AnchorChapter=8 and AnchorChapter2=2) ; 選擇關卡8-2
-	{
-		if (DwmCheckcolor(349, 431, 16777215))
+		else if (AnchorChapter=8 and AnchorChapter2=2) ; 選擇關卡8-2
 		{
-			C_Click(348,430)
+			if (DwmCheckcolor(349, 431, 16777215))
+			{
+				C_Click(348,430)
+			}
 		}
-	}
-	else if (AnchorChapter=8 and AnchorChapter2=3) ; 選擇關卡8-3
-	{
-		if (DwmCheckcolor(390, 638, 16777215))
+		else if (AnchorChapter=8 and AnchorChapter2=3) ; 選擇關卡8-3
 		{
-			C_Click(391,639)
+			if (DwmCheckcolor(390, 638, 16777215))
+			{
+				C_Click(391,639)
+			}
 		}
-	}
-	else if (AnchorChapter=8 and AnchorChapter2=4) ; 選擇關卡8-4
-	{
-		if (DwmCheckcolor(858, 532, 16777215))
+		else if (AnchorChapter=8 and AnchorChapter2=4) ; 選擇關卡8-4
 		{
-			C_Click(859,533)
+			if (DwmCheckcolor(858, 532, 16777215))
+			{
+				C_Click(859,533)
+			}
 		}
-	}
-	else if (AnchorChapter=9 and AnchorChapter2=1) ; 選擇關卡9-1
-	{
-		if Find(x, y, 256, 282, 356, 342, "|<>*146$27.kDzz00zzk07zs0Ezy027zs0Ezzk27zy0Ezzk040C00U1km40C7kzzk27zy0Ezzk07zy61zzkU")
+		else if (AnchorChapter=9 and AnchorChapter2=1) ; 選擇關卡9-1
 		{
-			C_Click(x, y)
+			if Find(x, y, 256, 282, 356, 342, "|<>*146$27.kDzz00zzk07zs0Ezy027zs0Ezzk27zy0Ezzk040C00U1km40C7kzzk27zy0Ezzk07zy61zzkU")
+			{
+				C_Click(x, y)
+			}
 		}
-	}
-	else if (AnchorChapter=9 and AnchorChapter2=2) ; 選擇關卡9-2
-	{
-		if (Find(x, y, 394, 532, 494, 592, "|<>*133$30.kDzw307zs107zs027zsk27zsk27zwV27zzV27zz1040D3040C3m40A7y7zwD27zsD27zs107zs1UDzs1U"))
+		else if (AnchorChapter=9 and AnchorChapter2=2) ; 選擇關卡9-2
 		{
-			C_Click(x, y)
+			if (Find(x, y, 394, 532, 494, 592, "|<>*133$30.kDzw307zs107zs027zsk27zsk27zwV27zzV27zz1040D3040C3m40A7y7zwD27zsD27zs107zs1UDzs1U"))
+			{
+				C_Click(x, y)
+			}
 		}
-	}
-	else if (AnchorChapter=9 and AnchorChapter2=3) ; 選擇關卡9-3
-	{
-		if (Find(x, y, 802, 308, 902, 368, "|<>*139$30.kDzw307zs107zs027zsE27zsE27zzk27zz127zz1040D0040Dkm400Ey7zsE27zsE27zs007zs1kDzw3U"))
+		else if (AnchorChapter=9 and AnchorChapter2=3) ; 選擇關卡9-3
 		{
-			C_Click(x, y)
+			if (Find(x, y, 802, 308, 902, 368, "|<>*139$30.kDzw307zs107zs027zsE27zsE27zzk27zz127zz1040D0040Dkm400Ey7zsE27zsE27zs007zs1kDzw3U"))
+			{
+				C_Click(x, y)
+			}
 		}
-	}
-	else if (AnchorChapter=9 and AnchorChapter2=4) ; 選擇關卡9-4
-	{
-		if (Find(x, y, 934, 560, 1034, 620, "|<>*134$30.kDzz107zy107zy127zw127zw127zw127zsV27zsV0408V0400Vm4000y7zk027zk027zzV07zzVkDzzVU"))
+		else if (AnchorChapter=9 and AnchorChapter2=4) ; 選擇關卡9-4
 		{
-			C_Click(x, y)
+			if (Find(x, y, 934, 560, 1034, 620, "|<>*134$30.kDzz107zy107zy127zw127zw127zw127zsV27zsV0408V0400Vm4000y7zk027zk027zzV07zzVkDzzVU"))
+			{
+				C_Click(x, y)
+			}
 		}
 	}
 	else if (AnchorChapter="紅染1" or AnchorChapter="紅染2")
@@ -4132,6 +4135,35 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 			if (DwmCheckcolor(649, 601, 16777215))
 			{
 				C_Click(650,600) ;點擊SP3
+			}
+		}
+	}
+	else if (AnchorChapter="光榮1")
+	{
+		if (Find(x, y, 1137, 242, 1237, 297, Map_Special) and AnchorChapter="光榮1")
+		{
+			C_Click(1201, 226) ;畫面在主線地圖時，點擊特殊作戰進入SP地圖
+			sleep 2000
+		}
+		if (AnchorChapter="光榮1" and AnchorChapter2=1)
+		{
+			if (Find(x, y, 287, 319, 387, 374, Map_ChapterEventglorySP1))
+			{
+				C_Click(x, y) ;點擊SP1
+			}
+		}
+		else if (AnchorChapter="光榮1" and AnchorChapter2=2)
+		{
+			if (Find(x, y, 394, 581, 494, 636, Map_ChapterEventglorySP2))
+			{
+				C_Click(x, y) ;點擊SP2
+			}
+		}
+		else if (AnchorChapter="光榮1" and AnchorChapter2=3)
+		{
+			if (Find(x, y, 844, 435, 944, 490, Map_ChapterEventglorySP3))
+			{
+				C_Click(x, y) ;點擊SP3
 			}
 		}
 	}
@@ -5440,10 +5472,6 @@ if (AcademyDone<1)
 					LogShow("繼續學習！")
 					C_Click(788, 567)
 				}
-				else if (DwmCheckcolor(330, 209, 16777215) and DwmCheckcolor(414, 225, 16777215) and DwmCheckcolor(661, 548, 16777215) and DwmCheckcolor(608, 550, 16777215)) ;學習的技能已滿等
-				{
-					C_Click(643, 545) ;點擊確定
-				}
 				else if (Find(x, y, 1031, 624, 1131, 684, StartLesson)) ;選擇課本頁面
 				{
 					If (150expbookonly)
@@ -5473,10 +5501,6 @@ if (AcademyDone<1)
 						}
 					}
 				}
-				else if (DwmCheckcolor(330, 210, 16777215) and DwmCheckcolor(414, 226, 16777215) and DwmCheckcolor(599, 549, 4353453) and DwmCheckcolor(661, 559, 16777215)) ;技能滿等
-				{
-					C_Click(639, 545)
-				}
 				else if (Find(x, y, 700, 500, 860, 650, Academy_BTN_Confirm)) 
 				{
 					LogShow("確認使用教材以訓練技能！")
@@ -5494,48 +5518,54 @@ if (AcademyDone<1)
 						break
 					}
 				}
+				else
+				{
+					Message_Center() ;技能滿等
+				}
 				sleep 300
 			}
 		}
-		if (DwmCheckcolor(532, 233, 16776175) and Classroom and ClassroomDone<1) ;大講堂出現！
+		if (Find(x, y, 481, 203, 581, 258, ClassRoomDone) and Classroom and ClassroomDone<1) ;大講堂出現！
 		{
 			C_Click(460, 208)
 			Loop
 			{
-				if (DwmCheckcolor(78, 547, 16775151) and DwmCheckcolor(190, 67, 14610431)) ;等待進入大講堂
+				if (Find(x, y, 481, 203, 581, 258, ClassRoomDone)) ;等待進入大講堂
+					C_Click(460, 208)
+				if (Find(x, y, 866, 643, 966, 698, ClassRoomLvUp))
 					break
 				sleep 300
 			}
 			sleep 500
 			Loop
 			{
-				EndLesson := DwmCheckcolor(1229, 677, 11382445) ;結束課程
-				if (EndLesson) ;結束課程
-				{
-					Random, x, 1068, 1224
-					Random, y, 667, 699
+				if (Find(x, y, 1050, 644, 1150, 699, ClassRoomEnd)) ;結束課程
 					C_Click(x, y)
-				}
-				if (DwmCheckcolor(330, 210, 16777215) and DwmCheckcolor(414, 226, 16777215) and DwmCheckcolor(790, 556, 4355509))
+				if (Find(x, y, 760, 524, 860, 579, ClassRoomEndConfirm)) ;確認結束課程
 				{
-					C_Click(790, 554) ;確定結束課程
-				}
-				V := DwmCheckcolor(412, 99, 6520237) , I := DwmCheckcolor(474, 101, 6520237), C := DwmCheckcolor(551, 100, 6520237)
-				if (V and I and C)
-				{
-					Random, x, 267, 1108
-					Random, y, 81, 178
 					C_Click(x, y)
+					sleep 2000
+					C_Click(626, 133)
 				}
+				if (Find(x, y, 703, 428, 803, 483, ClassRoomAddS)) ;添加
+					C_Click(x, y)
+				if (Find(x, y, 125, 407, 225, 462, ClassRoomAddS2)) ;追加腳色(授課)
+					C_Click(x, y)
+				if (Find(x, y, 84, 31, 184, 86, ClassRoomDock)) ;船塢
+					break
 			}
+			Loop
+			{
+				
+			}
+			if (Find(x, y, 1048, 644, 1148, 699, ClassRoomBegin)) ;開始上課
+					C_Click(x, y)
 		}
 		sleep 300
-		Academycount++
-		if (Academycount>15)
+		if (A_index>15)
 		{
 			LogShow("離開學院。")
 			GetOil := 0
-			Academycount := 0
 			fullycoin := 0
 			learnt := 0
 			AcademyShopDone := 0
@@ -7679,6 +7709,7 @@ if !(Is_TT_Text2) {
 	Ldplayer3_TT := "推薦使用。"
 	Ldplayer4_TT := "僅供測試使用。"
 	NoxPlayer5_TT := "僅供測試使用。"
+	Operation_Relogin_TT := "偶爾會刷新到排位更前面的對手。"
 }
 if !(Is_TT_Text)
 {
