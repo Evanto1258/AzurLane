@@ -223,6 +223,8 @@ Battle_Victory := "|<>*111$34.zzzzzvzzzzzDzzzztzzzzzDzzzztzzzzzDzzzztzzzzzDzzzzt
 
 Battle_Defeat := "|<>*105$51.000000Tzs000000zz0000003zs000000Tz0000000zs0000007z0000000Tz0000003zzk00000DzzU00000zzz000007zzy00000Tzzs00003zzzU0000Dzzz00000zzzs00007zzzU0000zzzy00003zzzs0000TzzzU0003zzzw0000Dzzzk0001zzzy0000Dzzzs0000zzzz00004"
 
+Battle_De_Upgrade := "|<>*169$27.01z0007w000Ds000zU003y0007w000Tk000z0003s000y000DU001w000T600Dks01w7U0T0z07k7w1w0zkT01zbk07zw00Tz000zk003w000DU04"
+
 Battle_Touch_to_Continue := "|<>*129$24.U0wTWEwTWEwTUEwTU4w0UAw0aAwTU0wTU1wTyTwTU1wTU1U1yTU1y0bt00btU/btxdbtZdbtYYbtYY01AbU1DzbtU"
 
 Battle_End := "|<>*175$41.zzzzzzz0000006000000ANa0000MnA0000laM0001W8U00030000006000000ATzzzzyMzzzzzwlzzzzztXU0lzzn600003aA00007AM0000CMk0000QlzzzzztXzzzzzn7zzzzzaDzwzzzAM01zbyM"
@@ -253,7 +255,7 @@ View_Detail := "|<>*184$17.zzjzkDk0DsyzVsz3lyDs003lyz00S7ksDXYD6MyDlwTXsz7ly03wT
 Lock_Party := "|<>*92$7.0SSSQ00zzzzy2QTDbpm3"
 
 global Battle_Victory, Battle_Touch_to_Continue, Battle_End, Formation_Tank, Battle_BackAttack, SkipBtn, UnknowWife, Battle_BossIco
-global Battle_Exit_Battle, Battle_Defensive, Battle_Weigh, Switch_NoParty, BTN_Pause, Battle_Map, Battle_Defeat
+global Battle_Exit_Battle, Battle_Defensive, Battle_Weigh, Switch_NoParty, BTN_Pause, Battle_Map, Battle_Defeat, Battle_De_Upgrade
 
 ;///////////tomap//////////
 

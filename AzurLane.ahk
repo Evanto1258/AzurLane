@@ -2393,7 +2393,9 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 	}
 	if (FightRoundsDo and FightRoundsDone<1 and SwitchParty<1)
 	{
-		if ((FightRoundsDoCount=FightRoundsDo2) or (FightRoundsDo2="或沒子彈" and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 8, SearchDirection, 129, 96, 1271, 677)))
+		if ((FightRoundsDoCount=FightRoundsDo2) 
+		or (FightRoundsDo2="或沒子彈" 
+		and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 10, SearchDirection, 129, 96, 1271, 677)))
 		{
 			FightRoundsDone := 1
 			if FightRoundsDo3=撤退
@@ -2490,7 +2492,8 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 		}
 		if (bulletFailed<1 and Item_Bullet) ;只有在彈藥歸零時才會拾取
 		{
-			if (GdipImageSearch(x, y, "img/SubChapter/bullet.png", 105, SearchDirection, MapX1, MapY1, MapX2, MapY2) and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 10, SearchDirection, MapX1, MapY1, MapX2, MapY2))
+			if (GdipImageSearch(x, y, "img/SubChapter/bullet.png", 105, SearchDirection, MapX1, MapY1, MapX2, MapY2) 
+			and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 12, SearchDirection, MapX1, MapY1, MapX2, MapY2))
 			{
 				LogShow("發現：子彈補給！X : " x " Y: " y )
 				xx := x 
@@ -4505,12 +4508,12 @@ runwait, %Consolefile% launchex --index %emulatoradb% --packagename "com.hkmanju
 sleep 10000
 Winget, UniqueID,, %title%
 Global UniqueID
-IfWinExist ahk_class adframe ;雷電模擬器右下角的廣告
-	WinClose ahk_class adframe
-IfWinExist ahk_class ADFullScreenFrame ;雷電模擬器的全螢幕廣告
-	winclose ahk_class ADFullScreenFrame
 Loop
 {
+	IfWinExist ahk_class adframe ;雷電模擬器右下角的廣告
+		WinClose ahk_class adframe
+	IfWinExist ahk_class ADFullScreenFrame ;雷電模擬器的全螢幕廣告
+		winclose ahk_class ADFullScreenFrame
 	if (Find(x, y, 1197, 704, 1297, 764, CRIWare))
 	{
 		LogShow("位於遊戲首頁，自動登入")
@@ -4751,7 +4754,8 @@ if  (DailyGoalSub and DailyDone<1)
 			}
 		}
 	}
-	Iniwrite, %Today%, %SettingName%, Battle, Yesterday
+	if !(DailyHardMap) ;如果沒有勾選每日自動打困難存檔 (如果有勾選打完困難才存檔 避免某些情況沒有執行困難地圖)
+		Iniwrite, %Today%, %SettingName%, Battle, Yesterday
 	DailyBreak := 0
 	ChooseDailyParty := 0
 	CheckweekCount := 0
@@ -5356,8 +5360,7 @@ if (AcademyDone<1)
 						sleep 600
 					}
 				}
-				ShopCount++
-				if (Item_Ex4_Box and ShopCount>=6 and ShopCount<=10)
+				if (Item_Ex4_Box and A_index>=3 and A_index<=10)
 				{
 					if (Find(x, y, 700, 651, 1034, 711, supply)) ;軍需商店
 					{
@@ -5392,7 +5395,7 @@ if (AcademyDone<1)
 						}
 					}
 				}
-				if (Item_Cube_2 and ShopCount>=6 and ShopCount<=10)
+				if (Item_Cube_2 and A_index>=3 and A_index<=10)
 				{
 					if (Find(x, y, 700, 651, 1034, 711, supply)) ;軍需商店
 					{
@@ -5426,11 +5429,10 @@ if (AcademyDone<1)
 							sleep 500
 						}
 					}
-				}	
-				if (ShopCount>8)
+				}
+				if (A_index>=5)
 				{
 					AcademyShopDone := 1
-					ShopCount := 0
 					AtkCoin := 0
 					DefCoin := 0
 					SupCoin := 0
@@ -5439,7 +5441,6 @@ if (AcademyDone<1)
 					C_Click(59, 91)
 					break
 				}
-				sleep 500
 			}
 		}
 		if (Find(x, y, 825, 146, 925, 206, AcademyDoneIco2) and AcademyTactics and learnt<1) ;學院出現！
@@ -5554,20 +5555,13 @@ if (AcademyDone<1)
 			AcademyDone := 1
 			Settimer, AcademyClock, -900000 ;15分鐘後再開始檢查
 			C_Click(38, 92)
-			sleep 5000
+			sleep 3000
 			Loop, 60
 			{
 				if (Find(x, y, 86, 34, 186, 94, AcademyPage_Academy))
-				{
-					C_Click(38, 92)
-					sleep 5000
-				}
-				else if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor))
-				{
-					Break
-				}
-				GetItem()
-				CloseEventList()
+					C_Click(x, y)
+				else if !(Find(x, y, 86, 34, 186, 94, AcademyPage_Academy))
+					break
 				sleep 500
 			}
 			break
@@ -5735,7 +5729,7 @@ if (DormDone<1) ;後宅發現任務
 			Dorm_heart++
 		}
 		sleep 300
-		if (A_index>15)
+		if (A_index>=15)
 		{
 			LogShow("離開後宅。")
 			Dorm_Coin := 0
@@ -5744,18 +5738,13 @@ if (DormDone<1) ;後宅發現任務
 			DormDone := 1
 			Settimer, DormClock, -1800000 ;半小時檢查一次
 			C_Click(35, 86)
-			sleep 5000
+			sleep 3000
 			Loop, 30
 			{
 				if (Find(x, y, 0, 59, 91, 119, DormPage_in_Dorm))
-				{
 					C_Click(x, y)
-					sleep 2000
-				}
-				else if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor))
-				{
-					Break
-				}
+				else if !(Find(x, y, 0, 59, 91, 119, DormPage_in_Dorm))
+					break
 				sleep 500
 			}
 			break
@@ -6074,6 +6063,11 @@ battlevictory() ;戰鬥勝利(失敗) 大獲全勝
 		sleep 500
 		C_Click(x, y)
 	}
+	else if (Find(x, y, 443, 339, 543, 394, Battle_De_Upgrade)) ;指揮官可以通過以下方式提升艦隊實力
+	{
+		LogShow("提督SAMA請提升實力。")
+		AC_Click(537, 639, 715, 666)
+	}
 	else if (Find(x, y, 446, 69, 546, 129, Battle_Defeat)) ;點擊繼續
 	{
 		Global AnchorFailedTimes
@@ -6084,7 +6078,7 @@ battlevictory() ;戰鬥勝利(失敗) 大獲全勝
 		Random, x, 100, 1000
 		Random, y, 100, 600
 		sleep 500
-		C_Click(x, y)
+		;~ C_Click(x, y)
 	}
 }
 
@@ -6611,6 +6605,7 @@ ChooseParty(Byref StopAnchor)
 				Guicontrolget, AnchorChapter
 				Guicontrolget, AnchorChapter2
 				IsDailyHardMap := 0
+				Iniwrite, %Today%, %SettingName%, Battle, Yesterday
 				return
 			}
 			else
@@ -7641,13 +7636,8 @@ MoveMap(x , y) {
 
 MenuList(MenuList, Default) {
     Loop, parse, MenuList, |
-    {
-        if (A_LoopField=Default)
-            s .= A_LoopField "||"
-        else
-            s .= A_LoopField "|"
-    }
-    StringTrimRight, NewMenuList, s, 1
+        Choice .= (A_LoopField=Default) ? (A_LoopField "||") : (A_LoopField "|")
+    StringTrimRight, NewMenuList, Choice, 1
     return NewMenuList
 }
 
@@ -8005,10 +7995,7 @@ Update_help() {
 	FileEncoding , CP65001
 	Loop, Read, temp.txt
 	{
-		contents := a_loopreadline
-		if (contents="") {
-			contents := " "
-		}
+		contents := (a_loopreadline="") ? " " : a_loopreadline
 		guicontrol, , changeloglist, % contents
 	}
 	FileEncoding , CP950
@@ -8016,9 +8003,9 @@ Update_help() {
 }
 
 ;~ F3::
-;~ MapX1 := 10, MapY1 := 100, MapX2 := 1261, MapY2 := 680
+;~ MapX1 := 10, MapY1 := 100, MapX2 := 1271, MapY2 := 680
 ;~ Random, SearchDirection, 1, 8
-;~ if (GdipImageSearch(x, y, "img/SubChapter/Bullet_None.png", 8, SearchDirection, MapX1, MapY1, MapX2, MapY2))
+;~ if (GdipImageSearch(x, y, "img/SupplyStore/Part_Cannon.png", 120, SearchDirection, MapX1, MapY1, MapX2, MapY2))
 ;~ {
 ;~ WinActivate, %title%
 ;~ mousemove, %x%, %y%
