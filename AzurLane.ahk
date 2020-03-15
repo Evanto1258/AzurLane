@@ -6078,7 +6078,7 @@ battlevictory() ;戰鬥勝利(失敗) 大獲全勝
 		Random, x, 100, 1000
 		Random, y, 100, 600
 		sleep 500
-		;~ C_Click(x, y)
+		C_Click(x, y)
 	}
 }
 
