@@ -49,21 +49,16 @@ theBox_T4 := "|<>*143$32.w3z4Dz0zk3zkDw0zM3zkDq0zz1xkTzqTC3zw7lszz3w7bzsz0Tzzjk1
 theCube2 := "|<>*199$71.zzUQ000zUzzzzzk0000TUzzzzzw0000x1zzzzzw0000Rlzzzyzs0000PXzzzzjU0000b7zzzzz00002Dbzzzzy00000Tfzzzww00003zDzzzts00001yTzzzhU00007wzzzz+00000DtzzzyQ000007Hzzzys00000Cbzzzxs00000TDzzzvk00000yzzzznU00001zzzzzb000001zzzzzC000000TzvzuQ000000DzrzyM0000007zZzws0000003y/zss0000001wTzcs0000000MrzN000000003"
 
 ClassRoomDone := "|<>*177$14.3s1z0zsTzDzvzzzDzXzszyDzXzszyDzXzszyDznzzzzDzXzwzzzc"
-
 ClassRoomLvUp := "|<>*198$29.zw33zzU27zw1wDz0DsTtwTkzzszVzzlz3zzXy7zz7wDzyDsTzwTktzszVV00001z1y7zy7wDzwDsTzsTkzzkzVzzXz3zy7y7zwDwDzszsTzVzkzz7zVzwTz3z"
-
 ClassRoomEnd := "|<>*201$28.zz7zTzwTwE0000zy777zwTzzzlzztz7wzU001yDly7sz7szXwTXyDlyDsz7szXwTXy000Dsw3szXkLrzy1Dzzk6Tzy4QTzklkzyD7UzlwTUyDlz0Xz7y2"
-
 ClassRoomEndConfirm :="|<>*186$31.xzkTVw0000MDzzs07zzw43zzsC3zzsD1zzs7l0003zzsDzzzw7zzzy3zzwD1xzy1UwTz1kQ3zUs01zkw7zzsS3zzsD1zzw3Uzzy0kTzy60Dzz7U007Xk003Xw003XzU01k"
-
+ClassRoomVictory := "|<>*170$54.0kA30kA30U"
 ClassRoomBegin := "|<>*211$31.wDz1zy7zVzz7zVzz3bltzV1lwS00Nz3ssNzksQ9zsQC800674073730TVXVbztVkzzzlsxztswS00QQD2wD6DXy7k7lz3w3szVz0wTkzUCDsTU37wDl1Xy7lklz3lwM01k"
-
 ClassRoomAddS := "|<>*165$24.Dk00Tk00ENzzsTU3U1U300U300V3skXXskXXMkXXMkXXEkXXEkXXEkXXkkXXkkXXlkXXVkXXVkXXXkV37UU361U3C1UCPzzsny00U"
-
 ClassRoomAddS2 := "|<>*211$23.0Tw00zs01zk03zU07z0Tzzzzzzzzzzzzzzzzzzzzzzzzzzzzzy0zs01zk03zU07z00Dy00Tw1"
-
 ClassRoomDock := "|<>*154$26.zzzzz3zzzUy07U1U1s0MMS7667UFVVs4MMS04C3U03UMQ1w400zz01zzk0E0C7403UF00s4EwC04D3W13kswEwCD4D33l3klkE0Qw407T303s"
-
+ClassRoom_Moveout := "|<>*172$22.U006000Tzbzzszzz3Tzs8TyAsTVnskTDkbwzrznzzzzzs00TXztyTzbtzyTbztyTzbs00TU01yTzbU"
+ClassRoom_Lesson := "|<>*162$5.zzzzzzw0Dzy07zzU"
 
 global Academy_BTN_Confirm
 
@@ -452,3 +447,26 @@ GoMatchingGame := "|<>*138$30.zUy3zz0S3zy0S7bw0TUDs0T0Dk0k0DU1U0Dc4U0DwAU0TyMk3z
 MatchingGameConfirm := "|<>*178$31.00L1sy7t00C3sU071sEy7VsM77kw8FjsTAMTwTwA9wCy68C6D007033VzVVVkzUkUsHkM0M0sAA00Q6673w333VyVVVkbkkksFsMMM0wAAA7y6673z033VbVVVklknkkEE"
 
 Global LittleChicken, InMatchingGame, GoMatchingGame, MatchingGameConfirm
+
+
+;/////////AutoBuild 每日自動建造/////////////
+Build := "|<>*129$42.Dk133zs7nkY0zkVwA08TVnk2067Xz00U13zz00M0lzz0060Uzz0010Vzz001UNzz001UNzz001UNzz001Utzz00DUtzz00DVtzz00Dbtzz00Dztzz00Dztzz00Dztzz00Dztzz00Dztzz00Dztzz00Dztzn00DzlrXk0Dz1X3s0Dw3lU"
+
+Page_Build := "|<>*146$18.z7zyDzwTzszzlzzVzz000U00lzzszzwTzyDzz7zzXzzlzzszU"
+Start_Building := "|<>*225$12.00U0k0s0w0y0z0zUzkzszwU"
+Build_Qty := "|<>*177$26.zz7zzzlzzzwTzzz7zzzlzzzwTzzz7zzzlzzzwTzzz7zzzlzw0000000000003zwTzzz7zzzlzzzwTzzz7zzzlzzzwTzzz7zzzlzy"
+Batch_Build := "|<>*184$24.zzwTkksTkksTUEsTUEsTUEsMkks0kk01kk03kk8TkksTk0sT00sT0EsT0ksTEksTkksTkksTkksTkk0Mkk0MUk00UkM11lw1U"
+Build_Confirm := "|<>*169$18.znzznzznzznzU01000z0zzGzyGTwnDwnDtnbnnnU00A0AznzznzznzzrzU"
+Get_Character := "|<>*190$39.XUsDzltw77zwDzUk000zw7vzk3zUzDy1zw7wTUTz0zkM7zsDz01zk1zw0070DzU01w3zk00TUTk7U7w7k7zVzrzzzzjU"
+Build_HaveNoEnough := "|<>*175$45.zzzzk00s001y007zwTznzyzzbzyTzrztzznzyzyDzyTzrzVzzk00zs9zy007y9XzztzzXCDzzDzstszttzwDDlzDDz3tz7ts0NzDxzD03ztzzltzzzDzy7DzztzzmNzzzDzwtDzztzz7UzzzDzly00ztzzTzkA"
+MainPage_Storage := "|<>*134$29.A00TsM0Tzkk3zzVU7zz30DyS00TQw00wNs01snk03XbU07bD00DAC00SMw00wns01tro03nnc07wD80D3kM0QS2Q1zUyQ3sD4S2/w0D3yA0Dzk0ADwk3w7UET"
+
+Storage_Rare := "|<>*151$19.zltk8MM60S7UT60300NU00ME0AA1y60y0030000140sWIQFCC87743XyDtzDk"
+Storage_EX := "|<>*144$19.zwzkCDk6AzXCDt03sU1UKAkD7lw08y0418m0YNwE0y80z7WTXl7m03V00lzyk"
+Storage_EX2 := "|<>*158$18.sszsszksslskVsl1s11s3ls7lkDl0Tl0zlszlszlsslsMls0lw1U"
+Storage_EX3 :="|<>*202$31.y3kT7y3sDUz1w7UDUy3UDUT1UDkDUUTk7k0Ts3s0Ts1w0zwUy1zwkS1zzsC0zzw6ETzy3sDzz1w7zzUy3zrkT1znsDUztw7kTsy3sDwT1w007Uy003kTU01sDk01wDy03k"
+Storage_EX4 := "|<>*197$38.k0y3zzwEDUzzyQ3sDzzD0y3zzzkDUzzzw3sDzzz0y3zzzkDUzzbw3sDztz0y3zyzkDUzzDw3sDznz0y1zkTkDU003w3s000z0y000DkDk007w7zzzzz7zzzzs"
+Descending := "|<>*117$14.0080707s3z1zwzU"
+Ascending := "|<>*114$15.zjzszy3zUDs0S01004"
+Storage_material := "|<>*122$22.wzyTnztzDzbwzyTnztk0000003nzly7z7sDsTUT1w8wbknaSHwNlDXbAwSRnXtzDTbwzyTnztzDs7wzky"
+Storage_Bulid := "|<>*156$18.000000w00zzVk1Vk1VllVllVllVllVllVllVk1Vk3VzzVzy1zy3U"

@@ -536,15 +536,16 @@ iniread, AcademySub, %SettingName%, Academy, AcademySub, 0
 Gui, Add, CheckBox, x30 y%Tab_Y% w150 h20 gAcademysettings vAcademySub checked%AcademySub% +cFF0044, 啟動自動學院
 Tab_Y +=30
 iniread, AcademyOil, %SettingName%, Academy, AcademyOil, 1
-Gui, Add, CheckBox, x30 y%Tab_Y% w150 h20 gAcademysettings vAcademyOil checked%AcademyOil%, 採集石油
-Tab_Y +=30
+Gui, Add, CheckBox, x30 y%Tab_Y% w80 h20 gAcademysettings vAcademyOil checked%AcademyOil%, 採集石油
 iniread, AcademyCoin, %SettingName%, Academy, AcademyCoin, 1
-Gui, Add, CheckBox, x30 y%Tab_Y% w150 h20 gAcademysettings vAcademyCoin checked%AcademyCoin%, 領取金幣
+Gui, Add, CheckBox, x+20 y%Tab_Y% w80 h20 gAcademysettings vAcademyCoin checked%AcademyCoin%, 領取金幣
+iniread, ClassRoom, %SettingName%, Academy, ClassRoom, 0
+Gui, Add, CheckBox, x+20 y%Tab_Y% w100 h20 gAcademysettings vClassRoom checked%ClassRoom%, 大講堂上課
 Tab_Y +=30
 iniread, AcademyTactics, %SettingName%, Academy, AcademyTactics, 1
 Gui, Add, CheckBox, x30 y%Tab_Y% w80 h20 gAcademysettings vAcademyTactics checked%AcademyTactics%, 學習技能
 iniread, 150expbookonly, %SettingName%, Academy, 150expbookonly, 1
-Gui, Add, CheckBox, x120 y%Tab_Y% w200 h20 gAcademysettings v150expbookonly checked%150expbookonly%, 僅使用150`%經驗的課本
+Gui, Add, CheckBox, x+20 y%Tab_Y% w210 h20 gAcademysettings v150expbookonly checked%150expbookonly%, 僅使用150`%經驗的課本
 Tab_Y +=30
 iniread, AcademyShop, %SettingName%, Academy, AcademyShop, 1
 Gui, Add, CheckBox, x30 y%Tab_Y% w220 h20 gAcademysettings vAcademyShop checked%AcademyShop%, 購買補給：
@@ -660,10 +661,20 @@ Tab_Y += 30
 Gui, Add, Text, x30 y%Tab_Y% w100 h20 , 軍事委託：
 Tab_Y += 30
 Gui, Add, Text, x30 y%Tab_Y%, 1. 消耗石油10點以上的任務不接取。`n`n2. 任務獎勵出現「石油」強制接取。`n`n3. 任務獎勵出現「紅尖尖」強制接取。
-GuiControl, disable, MissionSub1
-GuiControl, disable, MissionSub2
-GuiControl, disable, MissionSub3
-
+Tab_Y += 90
+iniread, AutoBuild, %SettingName%, MissionSub, AutoBuild, 0
+iniread, AutoBuild2, %SettingName%, MissionSub, AutoBuild2, 輕型艦
+iniread, AutoBuild3, %SettingName%, MissionSub, AutoBuild3, 1
+iniread, AutoExEqu, %SettingName%, MissionSub, AutoExEqu, 0
+Gui, Add, CheckBox, x30 y%Tab_Y% w80 h20 gMissionsettings vAutoBuild checked%AutoBuild% , 每日建造
+Tab_Y -= 3
+AutoBuild2List = 輕型艦|重型艦|特型艦|限時艦|
+Gui, Add, DropDownList, x+10 y%Tab_Y% w70 h200 gMissionsettings vAutoBuild2, % MenuList(AutoBuild2List, AutoBuild2)
+Gui, Add, DropDownList, x+10 y%Tab_Y% w40 h200 gMissionsettings vAutoBuild3  choose%AutoBuild3% , 1||2|3|4|5|6|7|8|9|10|
+Tab_Y += 5
+Gui, Add, Text, x+10 y%Tab_Y%, 艘。
+Tab_Y -= 3
+Gui, Add, CheckBox, x+10 y%Tab_Y% w180 h20 gMissionsettings vAutoExEqu checked%AutoExEqu% , 強化最弱的裝備１次。
 
 Gui, Tab, 其　他
 Tab_Y := 90
@@ -1231,6 +1242,7 @@ Critical
 Guicontrolget, AcademySub
 Guicontrolget, AcademyOil
 Guicontrolget, AcademyCoin
+Guicontrolget, ClassRoom
 Guicontrolget, AcademyTactics
 Guicontrolget, AcademyShop
 Guicontrolget, 150expbookonly
@@ -1256,6 +1268,7 @@ SaveAcademysettings:
 Iniwrite, %AcademySub%, %SettingName%, Academy, AcademySub
 Iniwrite, %AcademyOil%, %SettingName%, Academy, AcademyOil
 Iniwrite, %AcademyCoin%, %SettingName%, Academy, AcademyCoin
+Iniwrite, %ClassRoom%, %SettingName%, Academy, ClassRoom
 Iniwrite, %AcademyShop%, %SettingName%, Academy, AcademyShop
 Iniwrite, %AcademyTactics%, %SettingName%, Academy, AcademyTactics
 Iniwrite, %150expbookonly%, %SettingName%, Academy, 150expbookonly
@@ -1340,9 +1353,22 @@ return
 Missionsettings: ;任務設定
 Critical
 Guicontrolget, MissionSub
-Iniwrite, %MissionSub%, %SettingName%, MissionSub, MissionSub
+Guicontrolget, AutoBuild
+Guicontrolget, AutoBuild2
+Guicontrolget, AutoBuild3
+Guicontrolget, AutoExEqu
+Settimer, SaveMissionsettings, -500
 Critical, off
 return
+
+SaveMissionsettings:
+Iniwrite, %MissionSub%, %SettingName%, MissionSub, MissionSub
+Iniwrite, %AutoBuild%, %SettingName%, MissionSub, AutoBuild
+Iniwrite, %AutoBuild2%, %SettingName%, MissionSub, AutoBuild2
+Iniwrite, %AutoBuild3%, %SettingName%, MissionSub, AutoBuild3
+Iniwrite, %AutoExEqu%, %SettingName%, MissionSub, AutoExEqu
+return
+
 
 Othersettings: ;其他設定
 Critical
@@ -1740,19 +1766,22 @@ Mainsub: ;優先檢查出擊以外的其他功能
 if (Noxplayer5)
 {
 	LDplayerCheck := Find(x, y, 0, 0, 60, 35, NoxPlayerLogo) 
-} else {
+} 
+else 
+{
 	LDplayerCheck := Find(x, y, 0, 0, 60, 35, LdPlayerLogo) 
 }
-if (LDplayerCheck=0) {
+if !(LDplayerCheck) 
+{
 	Guicontrol, ,starttext, 目前狀態：未能正確偵測到模擬器。
 	sleep 5000
 }
 Formattime, Nowtime, ,HHmm
-if !LDplayerCheck ;檢查模擬器有沒有被縮小
+if !(LDplayerCheck) ;檢查模擬器有沒有被縮小
 {
 	goto, Winsub
 }
-else if LDplayerCheck
+else if (LDplayerCheck)
 {
 	if (NowTime=0001 or Nowtime=1301)
 	{
@@ -1761,6 +1790,11 @@ else if LDplayerCheck
 		{
 			OperationDone := 0  ;重置演習判斷
 			ResetOperationDone := 1
+		}
+		if (AutoBuild)
+		{
+			ReadBuild := 0
+			HadBuild := 0
 		}
 	}
 	if (ResetOperationTime and ResetOperationDone<1 and OperationSub) ;如果有勾選自動重置演習
@@ -1792,7 +1826,7 @@ else if LDplayerCheck
 	WeighAnchor := Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor) ;出擊BTN
 	MissionCheck := Find(x, y, 868, 680, 968, 740, MainPage_MissionDone) ;任務完成
 	MissionCheck2 :=Find(x, y, 2, 154, 102, 214, MainPage_N_Done)
-	if (MissionSub and (MissionCheck or MissionCheck2)) ;任務 or 軍事委託
+	if (MissionSub and (MissionCheck or MissionCheck2 or (AutoBuild and !HadBuild))) ;任務 or 軍事委託
 	{
 		sleep 500
 		gosub, MissionSub
@@ -1807,8 +1841,13 @@ else if LDplayerCheck
 		{
 			if (Find(x, y, 403, 472, 503, 532, WaitingforAcademy)) ;等待進入學院/後宅選單
 				break
-			if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation)) ;沒有正確進入選單
+			else if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation)) ;沒有正確進入選單
 				AC_Click(501, 713, 624, 738)
+			else if (A_index>=100)
+			{
+				LogShow("進入生活圈(學院)時發生錯誤")
+				return
+			}
 			sleep 500
 		}
 		sleep 1200
@@ -1835,8 +1874,13 @@ else if LDplayerCheck
 		{
 			if (Find(n, m, 403, 472, 503, 532, WaitingforAcademy)) ;等待進入學院/後宅選單
 				break
-			if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation)) ;沒有正確進入選單
+			else if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation)) ;沒有正確進入選單
 				AC_Click(501, 713, 624, 738)
+			else if (A_index>=100)
+			{
+				LogShow("進入生活圈(後宅)時發生錯誤")
+				return
+			}
 			sleep 500
 		}
 		sleep 1200
@@ -1864,9 +1908,14 @@ else if LDplayerCheck
 		{
 			if (Find(x, y, 101, 33, 201, 93, TechPage_ResearchDept))
 				break ;等待進入科研選單
-			if Find(x, y, 716, 683, 816, 743, MainPage_ResearchDeptDone) 
+			else if Find(x, y, 716, 683, 816, 743, MainPage_ResearchDeptDone) 
 			{
 				AC_Click(660, 713, 775, 738)
+			}
+			else if (A_index>=100)
+			{
+				LogShow("進入科研選單時發生錯誤")
+				return
 			}
 		}
 		gosub, TechacademySub
@@ -2017,45 +2066,6 @@ if (Techacademy_Done) ;軍部研究室OK
 				sleep 1000
 				C_Click(885, 252)
 			}
-			;~ if (Tech_NoCoin and Tech_NoCoincount<28)
-			;~ {
-				;~ sleep 1500
-				;~ if (Find(x, y, 800, 420, 1070, 510, Tech_NoCoinIco))
-				;~ {
-					;~ Tech_NoCoincount++
-					;~ message = 不使用金幣，嘗試切換研發項目 %Tech_NoCoincount%
-					;~ LogShow(message)
-					;~ C_Click(698, 705)
-					;~ sleep 1000
-					;~ C_Click(888, 248)
-				;~ }
-				;~ else if (py=Is_StartTech and ((k=1 and TechTarget_01) or (k=2 and TechTarget_02) or (k=3 and TechTarget_03) or (k=3 and TechTarget_03) or (k=4 and TechTarget_04) or (k=5 and TechTarget_05) or (k=6 and TechTarget_06) or (k=7 and TechTarget_07)))
-				;~ {
-					;~ if (py!=Is_StartTech)
-					;~ {
-						;~ message = %pj% 優先順序不符 (順序: %py%)。
-						;~ LogShow(message)
-						;~ C_Click(698, 705)
-						;~ sleep 1000
-						;~ C_Click(888, 248)
-					;~ }
-					;~ else 
-					;~ {
-						;~ message = 開始研發 %pj% (優先順序: %py%)。
-						;~ LogShow(message)
-						;~ C_Click(507, 617)
-						;~ sleep 1000
-						;~ if (Find(x, y, 429, 330, 529, 390, TechPage_Is_Teching))
-						;~ {
-							;~ LogShow("已有研發科目，嘗試切換項目")
-							;~ In_StartTech := 0
-							;~ C_Click(698, 705)
-							;~ sleep 1000
-							;~ C_Click(888, 248)
-						;~ }
-					;~ }
-				;~ }
-			;~ }
 			if (k=1 and TechTarget_01) or (k=2 and TechTarget_02) or (k=3 and TechTarget_03) or (k=3 and TechTarget_03) or (k=4 and TechTarget_04) or (k=5 and TechTarget_05) or (k=6 and TechTarget_06) or (k=7 and TechTarget_07)
 			{
 				if (py!=Is_StartTech) 
@@ -4776,6 +4786,11 @@ if (MissionCheck) ;如果有任務獎勵
 			C_Click(883, 725) ;點擊任務按紐
 			sleep 1000
 		}
+		else if (A_index>=20) 
+		{
+			LogShow("進入任務列表失敗")
+			return
+		}
 		sleep 500
 	} until Find(x, y, 2, 154, 102, 214, MissionPage_All) ;等待進入任務界面 (偵測金色的"全部")
     Loop
@@ -4852,7 +4867,7 @@ if (MissionCheck2) ;在主選單偵測到軍事任務已完成
 		else if (A_Index>200)
 		{
 			LogShow("軍事委託出現錯誤1")
-			
+			return
 		}
 		sleep 500
 	}
@@ -4945,6 +4960,192 @@ if (MissionCheck2) ;在主選單偵測到軍事任務已完成
 		}
 	}
 	LogShow("軍事委託結束")
+}
+if (AutoBuild and !HadBuild)
+{
+	if !(ReadBuild)
+	{
+		FormatTime, Today, ,dd
+		IniRead, HadBuild, %SettingName%, AutoBuild, HadBuild, 0
+		if (Today=HadBuild)
+			HadBuild := 1
+		else
+			HadBuild := 0
+		ReadBuild := 1
+	}
+	if !(HadBuild)
+	{
+		if (Find(x, y, 950, 698, 1050, 753, Build)) ;首頁的建造
+		{
+			LogShow("開始自動建造：" AutoBuild2 " " AutoBuild3 " 艘")
+			C_Click(x, y)
+			sleep 1500
+			Loop
+			{
+				if (Find(x, y, 950, 698, 1050, 753, Build)) ;首頁的建造
+					C_Click(x, y)
+				else if (Find(x, y, 14, 59, 114, 114, Page_Build)) ;已進入建造頁面
+				{
+					C_Click(50, 203)
+					sleep 2000
+					break
+				}
+				else if (A_index>=50) 
+				{
+					LogShow("進入每日自動建造過程中發生錯誤")
+					break
+				}
+				sleep 500
+			}
+			if (AutoBuild2="輕型艦")
+				C_Click(460, 672)
+			else if (AutoBuild2="重型艦")
+				C_Click(668, 672)
+			else if (AutoBuild2="特型艦")
+				C_Click(880, 672)
+			else if (AutoBuild2="限時艦")
+				C_Click(261, 672)
+			sleep 1000
+			Loop
+			{
+				if (Find(x, y, 1167, 614, 1267, 669, Start_Building) and !Start_Building_Check) ;開始建造
+				{
+					C_Click(1138, 665)
+					sleep 1000
+				}
+				else if (Find(x, y, 720, 278, 820, 333, Build_Qty)) ;建造數量
+				{
+					if (AutoBuild3>=2)
+					{
+						Qty := AutoBuild3 -1
+						xx := x, yy := y
+						Loop, %Qty%
+						{
+							sleep 300
+							C_Click(xx, yy)
+						}
+					}
+					sleep 500
+					C_Click(786, 510) ;確認建造
+					sleep 1000
+				}
+				else if (Find(x, y, 1100, 128, 1200, 183, Batch_Build)) ;批量完成
+				{
+					Start_Building_Check := 1
+					C_Click(x, y)
+				}
+				else if (Find(x, y, 730, 475, 830, 530, Build_Confirm))
+				{
+					C_Click(793, 566)
+				}
+				else if (Find(x, y, 1167, 614, 1267, 669, Start_Building) and Start_Building_Check)
+				{
+					sleep 1000
+					C_Click(1221, 73) ;返回首頁
+					Loop
+					{
+						if (Find(x, y, 1167, 614, 1267, 669, Start_Building))
+							C_Click(1221, 73) ;返回首頁
+						else if !(Find(x, y, 1167, 614, 1267, 669, Start_Building))
+							break
+						else if (A_index>=100)
+							{
+								LogShow("建造船艦返回首頁的過程中發生錯誤")
+								return
+							}
+						sleep 500
+					}
+					Start_Building_Check := 0
+					sleep 1000
+					break
+				}
+				else if (Find(x, y, 537, 215, 637, 270, Get_Character))
+				{
+					C_Click(x, y)
+				}
+				else if (Find(x, y, 520, 333, 620, 388, Build_HaveNoEnough))
+				{
+					LogShow("已經沒有足夠的物資可供建造船艦")
+					Start_Building_Check := 1
+					C_Click(486, 551)
+				}
+				GetCard()
+				shipsfull()
+				sleep 300
+			}
+			IniWrite, %Today%, %SettingName%, AutoBuild, HadBuild
+			HadBuild := 1
+			LogShow("建造" AutoBuild2 " " AutoBuild3 " 艘已執行完畢。")
+			if (AutoExEqu and Find(x, y, 318, 696, 418, 751, MainPage_Storage)) ;自動強化裝備 首頁的倉庫按鈕
+			{
+				C_Click(x, y)
+				Loop
+				{
+					if (Find(x, y, 318, 696, 418, 751, MainPage_Storage)) ;首頁的倉庫
+					{
+						C_Click(x, y)
+					}
+					else if (Find(x, y, 1018, 33, 1118, 88, Storage_Rare)) ;進入倉庫後的右上角稀有度
+					{
+						C_Click(x, y)
+					}
+					else if (Find(x, y, 1059, 164, 1159, 219, Storage_EX)) ;把排序：稀有度改成強化
+					{
+						C_Click(x, y)
+					}
+					else if (Find(x, y, 906, 37, 1006, 92, Descending)) ;降序改成升序 確保排序第一個是最弱(或未經強化)的裝備
+					{
+						C_Click(x, y)
+					}
+					else if (Find(x, y, 908, 31, 1008, 86, Ascending) and Find(x, y, 1045, 32, 1145, 87, Storage_EX2) and !Equ_EX_Complete)
+					{
+						C_Click(205, 191) ;強化第一個裝備
+					}
+					else if (Find(x, y, 714, 522, 880, 712, Storage_EX3) and !Equ_EX_Complete) ;點擊裝備後的 拆解 | 強化 按鈕  並點擊強化
+					{
+						C_Click(x, y)
+					}
+					else if (Find(x, y, 570, 240, 670, 295, Storage_EX4)) ;出現 強化完成頁面 點擊繼續
+					{
+						Equ_EX_Complete := 1
+						C_Click(x, y)
+					}
+					else if (Find(x, y, 714, 522, 880, 712, Storage_EX3) and Equ_EX_Complete) ;強化 按鈕  點擊空白處離開
+					{
+						C_Click(629, 85)
+					}
+					else if (Find(x, y, 246, 682, 346, 737, Storage_material)) ;位於材料頁面 切換到裝備
+					{
+						C_Click(1029, 708)
+					}
+					else if (Find(x, y, 1015, 33, 1115, 88, Storage_Bulid)) ;位於製造裝備頁面 切換到裝備 
+					{
+						C_Click(1029, 708)
+					}
+					else if (Find(x, y, 1045, 32, 1145, 87, Storage_EX2) and Equ_EX_Complete) ;裝備已強化完畢，離開
+					{
+						Loop
+						{
+							 if (Find(x, y, 1045, 32, 1145, 87, Storage_EX2))
+								C_Click(1238, 67) ;返回首頁
+							else if !(Find(x, y, 1045, 32, 1145, 87, Storage_EX2))
+								break
+							else if (A_index>=100)
+							{
+								LogShow("強化裝備返回首頁的過程中發生錯誤")
+								return
+							}
+							sleep 500
+						}
+						Equ_EX_Complete := 0
+						break
+					}
+					sleep 300
+				}
+				LogShow("裝備強化完畢")
+			}
+		}
+	}
 }
 return
 
@@ -5508,44 +5709,125 @@ if (AcademyDone<1)
 				sleep 300
 			}
 		}
-		if (Find(x, y, 481, 203, 581, 258, ClassRoomDone) and Classroom and ClassroomDone<1) ;大講堂出現！
+				if (Classroom)
 		{
-			C_Click(460, 208)
-			Loop
+			Formattime, Checkweek, , Wday ;星期的天數 (1 – 7). 星期天為 1.
+			if (Find(x, y, 481, 203, 581, 258, ClassRoomDone) and Checkweek!=1) ;大講堂出現！ 星期天不執行
 			{
-				if (Find(x, y, 481, 203, 581, 258, ClassRoomDone)) ;等待進入大講堂
-					C_Click(460, 208)
-				if (Find(x, y, 866, 643, 966, 698, ClassRoomLvUp))
-					break
-				sleep 300
-			}
-			sleep 500
-			Loop
-			{
-				if (Find(x, y, 1050, 644, 1150, 699, ClassRoomEnd)) ;結束課程
-					C_Click(x, y)
-				if (Find(x, y, 760, 524, 860, 579, ClassRoomEndConfirm)) ;確認結束課程
+				C_Click(460, 208)
+				Loop
+				{
+					if (Find(x, y, 481, 203, 581, 258, ClassRoomDone)) ;等待進入大講堂
+						C_Click(460, 208)
+					if (Find(x, y, 866, 643, 966, 698, ClassRoomLvUp))
+						break
+					sleep 300
+				}
+				sleep 500
+				Loop
+				{
+					if (Find(x, y, 1050, 644, 1150, 699, ClassRoomEnd)) ;結束課程
+						C_Click(x, y)
+					else if (Find(x, y, 760, 524, 860, 579, ClassRoomEndConfirm)) ;確認結束課程
+						C_Click(x, y)
+					else if (Find(x, y, 200, 57, 400, 112, ClassRoomVictory)) ;出現Victory
+						C_Click(x, y)
+					else if (Find(x, y, 703, 428, 803, 483, ClassRoomAddS)) ;添加
+						C_Click(x, y)
+					else if (Find(x, y, 125, 407, 225, 462, ClassRoomAddS2)) ;追加腳色(授課)
+						C_Click(x, y)
+					else if (Find(x, y, 84, 31, 184, 86, ClassRoomDock)) ;船塢
+						break
+					sleep 500
+				}
+				Try ;開始篩選 ; 
+				{
+					sleep 1500
+					C_Click(1136, 64) ;開啟篩選
+					Loop
+					{
+						sleep 500
+						if (A_index>100)
+						{
+							LogShow("進入篩選清單的過程中發生錯誤(大講堂)")
+						}
+					} until Find(x, y, 23, 121, 123, 176, Dock_Sort)
+					sleep 1000
+					C_Click(511, 156) ;排序 等級
+					C_Click(354, 230) ;索引 全部
+					C_Click(357, 362)  ;陣營全 陣營
+					C_Click(353, 497)  ;稀有度 全部
+					C_Click(353, 566) ;附加索引 全部
+					C_Click(795, 676) ;確認
+					sleep 1500
+				}
+				if (Find(x, y, 969, 38, 1069, 93, Descending)) ;降序改成升序 
 				{
 					C_Click(x, y)
-					sleep 2000
-					C_Click(626, 133)
+					sleep 1500
 				}
-				if (Find(x, y, 703, 428, 803, 483, ClassRoomAddS)) ;添加
-					C_Click(x, y)
-				if (Find(x, y, 125, 407, 225, 462, ClassRoomAddS2)) ;追加腳色(授課)
-					C_Click(x, y)
-				if (Find(x, y, 84, 31, 184, 86, ClassRoomDock)) ;船塢
-					break
+				Lock_C := FindAll(0, 0, 1280, 720, "|<>*159$11.zzsT0A01y3wDxzzzs000001U7UD0Q8", 0.1, 0.1)
+				if (Lock_C)
+				{
+					ClassRoomEnd_Ship := 5
+					Loop
+					{
+						C_Click(Lock_C[A_index].x, Lock_C[A_index].y)
+						sleep 500
+						if (Find(x, y, 551, 351, 651, 406, ClassRoom_Moveout)) ; 是否移除後宅
+						{
+							ClassRoomEnd_Ship++
+							C_Click(487, 549) ;取消
+						}
+					} until A_index>=ClassRoomEnd_Ship
+					C_Click(1071, 703)
+				}
+				else
+				{
+					C_Click(62, 93) ;返回上一頁
+					Lock_C := 0
+				}
+				Loop
+				{
+					if (Find(x, y, 1172, 137, 1272, 192, ClassRoom_Lesson))
+					{
+						C_Click(604, 68)
+					}
+					else if (Find(x, y, 84, 31, 184, 86, ClassRoomDock))
+					{
+						C_Click(1071, 703)
+					}
+					else if (Find(x, y, 1048, 644, 1148, 699, ClassRoomBegin)) ;開始上課
+					{
+						if !(Lock_C)
+						{
+							C_Click(58, 91)
+							sleep 500
+						}
+						else
+						{
+							C_Click(x, y)
+						}
+					}
+					else if (Find(x, y, 1050, 644, 1150, 699, ClassRoomEnd)) ;結束課程
+					{
+						C_Click(58, 91)
+						sleep 500
+					}
+					else if (Find(x, y, 86, 34, 186, 94, AcademyPage_Academy)) ;返回學院頁面
+					{
+						break
+					}
+					else if (A_index>=100)
+					{
+						LogShow("大講堂出現錯誤")
+						return
+					}
+					sleep 500
+				}
 			}
-			Loop
-			{
-				
-			}
-			if (Find(x, y, 1048, 644, 1148, 699, ClassRoomBegin)) ;開始上課
-					C_Click(x, y)
 		}
-		sleep 300
-		if (A_index>15)
+		if (A_index>10)
 		{
 			LogShow("離開學院。")
 			GetOil := 0
@@ -5566,6 +5848,7 @@ if (AcademyDone<1)
 			}
 			break
 		}
+		sleep 300
 	}
 }
 return
@@ -7478,6 +7761,26 @@ Find(byref x="", byref y="", x1=0, y1=0, x2=0, y2=0, text="", err0=0, err1=0) {
 	return 0
 }
 
+FindAll(x1=0, y1=0, x2=0, y2=0, text="", err0=0, err1=0) {
+	if (err0=0 or err0<Err0_V)
+		err0 := Err0_V
+	if (err1=0 or err1<Err1_V)
+		err1 := Err1_V
+	WinGetPos, wx, wy, ww, wh, %title%
+	id := WinExist(title)
+	BindWindow(id)
+	xx1 := wx+x1, yy1 := wy+y1, xx2 := wx+x2, yy2 := wy+y2
+	if (ok := FindText(xx1, yy1, xx2, yy2 , err0, err1, text,1,1)) {
+		 for i,v in ok
+		{
+			ok[i].x := ok[i].x-wx
+			ok[i].y := ok[i].y-wy
+		}
+		return ok
+	}
+	return 0
+}
+
 MsgBoxEx(Text, Title := "", Buttons := "", Icon := "", ByRef CheckText := "", Styles := "", Owner := "", Timeout := "", FontOptions := "", FontName := "", BGColor := "", Callback := "") {
     Static hWnd, y2, p, px, pw, c, cw, cy, ch, f, o, gL, hBtn, lb, DHW, ww, Off, k, v, RetVal
     Static Sound := {2: "*48", 4: "*16", 5: "*64"}
@@ -7682,6 +7985,7 @@ if !(Is_TT_Text2) {
 	Ldplayer4_TT := "僅供測試使用。"
 	NoxPlayer5_TT := "僅供測試使用。"
 	Operation_Relogin_TT := "偶爾會刷新到排位更前面的對手。"
+	AutoBuild_TT := "使用本功能，船塢已滿設定必須是「整理船塢」，`n否則可能於船塢已滿時發生錯誤。"
 }
 if !(Is_TT_Text)
 {
@@ -8005,7 +8309,7 @@ Update_help() {
 ;~ F3::
 ;~ MapX1 := 10, MapY1 := 100, MapX2 := 1271, MapY2 := 680
 ;~ Random, SearchDirection, 1, 8
-;~ if (GdipImageSearch(x, y, "img/SupplyStore/Part_Cannon.png", 120, SearchDirection, MapX1, MapY1, MapX2, MapY2))
+;~ if (GdipImageSearch(x, y, "img/SubChapter/Bullet_None.png", 10, SearchDirection, MapX1, MapY1, MapX2, MapY2))
 ;~ {
 ;~ WinActivate, %title%
 ;~ mousemove, %x%, %y%
