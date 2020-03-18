@@ -2502,8 +2502,8 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 		}
 		if (bulletFailed<1 and Item_Bullet) ;只有在彈藥歸零時才會拾取
 		{
-			if (GdipImageSearch(x, y, "img/SubChapter/bullet.png", 105, SearchDirection, MapX1, MapY1, MapX2, MapY2) 
-			and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 12, SearchDirection, MapX1, MapY1, MapX2, MapY2))
+			if (GdipImageSearch(x, y, "img/SubChapter/bullet.png", 105, SearchDirection, MapX1, MapY1, MapX2, MapY2)
+			and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 10, SearchDirection, MapX1, MapY1, MapX2, MapY2))
 			{
 				LogShow("發現：子彈補給！X : " x " Y: " y )
 				xx := x 
@@ -5046,13 +5046,16 @@ if (AutoBuild and !HadBuild)
 					{
 						if (Find(x, y, 1167, 614, 1267, 669, Start_Building))
 							C_Click(1221, 73) ;返回首頁
-						else if !(Find(x, y, 1167, 614, 1267, 669, Start_Building))
+						else if (Find(x, y, 950, 698, 1050, 753, Build))
 							break
-						else if (A_index>=100)
+						else if (A_index>=30)
 							{
 								LogShow("建造船艦返回首頁的過程中發生錯誤")
 								return
 							}
+						GetItem()
+						SystemNotify()
+						CloseEventList()
 						sleep 500
 					}
 					Start_Building_Check := 0
@@ -5126,11 +5129,11 @@ if (AutoBuild and !HadBuild)
 					{
 						Loop
 						{
-							 if (Find(x, y, 1045, 32, 1145, 87, Storage_EX2))
+							if (Find(x, y, 1045, 32, 1145, 87, Storage_EX2))
 								C_Click(1238, 67) ;返回首頁
 							else if !(Find(x, y, 1045, 32, 1145, 87, Storage_EX2))
 								break
-							else if (A_index>=100)
+							else if (A_index>=30)
 							{
 								LogShow("強化裝備返回首頁的過程中發生錯誤")
 								return
@@ -5709,11 +5712,12 @@ if (AcademyDone<1)
 				sleep 300
 			}
 		}
-				if (Classroom)
+		if (Classroom)
 		{
 			Formattime, Checkweek, , Wday ;星期的天數 (1 – 7). 星期天為 1.
 			if (Find(x, y, 481, 203, 581, 258, ClassRoomDone) and Checkweek!=1) ;大講堂出現！ 星期天不執行
 			{
+				LogShow("大講堂上課。")
 				C_Click(460, 208)
 				Loop
 				{
@@ -5784,6 +5788,7 @@ if (AcademyDone<1)
 				}
 				else
 				{
+					LogShow("未找到上鎖的船艦。")
 					C_Click(62, 93) ;返回上一頁
 					Lock_C := 0
 				}
