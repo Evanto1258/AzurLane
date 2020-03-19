@@ -123,6 +123,8 @@ Commision_Delegation := "|<>*145$53.zzztzbzzzU003yDzkT0007yDs0S000TwS01zz1zzsw0z
 
 
 Delegation_Done := "|<>*203$21.zy9zzl3zyATzllVwA4001VyDwDlbVWAA00VlW0QAM3VX0wQM7XXVo0QCX70Ysk07wM1zDUTny7zzxU"
+Delegation_Page_Done := "|<>*84$11.zxznz7wDkT0w1k30400000U1U3U7UDUTUzVzXzbzc"
+Delegation_Spot := "|<>*170$30.0kA30U"
 Delegation_Incredible := "|<>*162$69.zyTbnw0z0Tk7znwSTU7s1y0wyTVnwwzDDns3nwWTbzs1y3wSTa3wzz0DnzrnwsTbbtbyTzyTbXw0zCTk7znwzTk7tty0U"  ;出現委託成功S頁面
 
 Delegation_Perfect := "|<>*158$70.0TUDk3w0w0y00y0z0Dk7k3s3ntzwwzDzDzb0DUzk3w7w7yQ1y3z0DkTnTtnztzwnzDzDzbDzU7nXwzw0y0zy0zD7nzk3w8"
@@ -133,6 +135,7 @@ DelegationPage_in_Delegation := "|<>*152$25.k001s000w000zzUzw000200000000Q003y31
 
 Delegation_LeftComm := "|<>*179$15.U0C03k0T07w1zUDy3zkTz7w"
 
+Global Delegation_Page_Done, Delegation_Spot
 
 ;//////////科研////////////////
 MainPage_ResearchDeptDone := "|<>*169$5.z6AMlX6Dxlry" ;首頁的科研完成驚嘆號
@@ -360,51 +363,55 @@ global Tips, Center_Confirm, Message_Inform, Message_Cancel, Message_Reconnect, 
 
 ;///////////////////////MAP/////////////////////////
 
-Map01_1 := 
+Map01_1 := "|<>*132$25.wTzwQDzw87zs03zs21zy1kzzksTzsQDzwC40C72073V03VkzzksTzsQDzwC7zy73zz2"
 Map01_2 := 
 Map01_3 := 
 Map01_4 := 
 
-Map02_1 := 
+Map02_1 := "|<>*139$26.UTzy03zz00Tz067zU1Vzw0ETzkwDzwC3zz3VU1kkM0Q8C0727zzk1zzw03zz00zzk0Dzw8"
 Map02_2 := 
 Map02_3 := 
 Map02_4 := 
 
-Map03_1 := 
+Map03_1 := "|<>*141$27.UDzz01zzk07zs0Ezy027zs7kzzksDzy71zzks40C7kU1k240C0Ezzk27zy00zzk0Dzy41zzkU"
 Map03_2 := 
 Map03_3 := 
 Map03_4 := 
 
-Map04_1 := 
+Map04_1 := "|<>*137$27.w7zz70zzks7zs60zy0k7zs60zzkW7zy4EzzkW40C0EU1k000C00Tzk03zy7kzzky7zy7kzzkU"
 Map04_2 := 
 Map04_3 := 
 Map04_4 := 
 
-Map05_1 := 
+Map05_1 := "|<>*135$27.0Dzz00zzk0Dzs0Tzy00Dzs00zzk07zy0Ezzky40C7kU1k240C0Ezzk27zy00zzk07zy41zzkU"
 Map05_2 := 
 Map05_3 := 
 Map05_4 := 
 
-Map06_1 := 
+Map06_1 := "|<>*137$27.kDzz40zzk07zs0Ezy03zzs0Hzzk07zy00zzk240C0EU1k240C0Ezzk27zy0EzzkU7zy61zzkU"
 Map06_2 := 
 Map06_3 := 
 Map06_4 := 
 
-Map07_1 := 
+Map07_1 := "|<>*131$25.0Dzw07zw03zs7Vzs3kzy1kzzksTzsQDzwC40C72073303VVzzkkzzsMTzwADzy4Dzz2"
 Map07_2 := 
 Map07_3 := 
 Map07_4 := 
 
-Map08_1 := 
+Map08_1 := "|<>*146$27.UDzz01zzk07zs0Ezy027zs0EzzkUDzy41zzk040C0EU1k240C0Ezzk27zy0Ezzk07zy41zzkU"
 Map08_2 := 
 Map08_3 := 
 Map08_4 := 
 
-Map09_1 := 
-Map09_2 := 
-Map09_3 := 
-Map09_4 := 
+Map09_1 := "|<>*146$38.zzUTzyDzU3zz3zs0zz0zy4DzUDzV3zw3zsEzzkzy4DzwDzV3zz3zs0U1kzy080QDzt2073zzkzzkzy4DzwDzV3zz3zs0zzkzzUTzw8"
+Map09_2 := "|<>*133$30.kDzw307zs107zs027zsk27zsk27zwV27zzV27zz1040D3040C3m40A7y7zwD27zsD27zs107zs1UDzs1U"
+Map09_3 := "|<>*139$30.kDzw307zs107zs027zsE27zsE27zzk27zz127zz1040D0040Dkm400Ey7zsE27zsE27zs007zs1kDzw3U"
+Map09_4 := "|<>*134$30.kDzz107zy107zy127zw127zw127zw127zsV27zsV0408V0400Vm4000y7zk027zk027zzV07zzVkDzzVU"
 
+Map10_1 := "|<>*139$36.wS3zzssQ1zzkUM0zz00MEzy0UMEzz0sMEzzksMEzzksMEzzksMEU1ksMEU1ksMEU1ksMEzzksMEzzksMEzzksQ1zzksS3zzkU"
+Map10_2 := 
+Map10_3 := 
+Map10_4 := 
 
 Map_ChapterEvent5_1 := "|<>*140$57.3zwDzzzzzsTzVzzzzzV3zwDzzzzw8M1U6486103040EV0U00MEV2480EV3248EV0248MEV248ADV3248EV3UQ8MEV248S1V3248EV3s48MEV248QEV3248EV3W48MEU208QEV3240E13U40MEU708S1kU"
 

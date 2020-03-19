@@ -90,18 +90,6 @@ if (title="") or (title="ERROR") {
           Msgbox, 16, 設定精靈, 未輸入任何資訊。
           reload
     }
-    ;~ else {
-		;~ InputBox, emulatoradb, 設定精靈, `n`n　　　　　　　請輸入模擬器編號,, 400, 200,,,,, 0
-		;~ if (emulatoradb>15 or emulatoradb<0) {
-			;~ msgbox, 請輸入介於0-15的數字
-			;~ exitapp
-		;~ }
-		;~ else {
-			;~ Iniwrite, %emulatoradb%, %SettingName%, emulator, emulatoradb
-			;~ Iniwrite, %title%, %SettingName%, emulator, title
-			;~ reload
-		;~ }
-    ;~ }
 }
 ;~ Gui, Add, Picture, x0 y0 +0x4000000 ,img\WH.jpg
 IniRead, azur_x, %SettingName%, Winposition, azur_x, 0
@@ -186,7 +174,7 @@ Tab1_Y += 5
 Gui, Add, text, x180 y%Tab1_Y% w20 h20  , 第
 Tab1_Y -= 5
 
-AnchorChapterList = 1|2|3|4|5|6|7|8|9|紅染1|紅染2|S.P.|異色1|異色2|墜落1|墜落2|光榮1|
+AnchorChapterList = 1|2|3|4|5|6|7|8|9|10|紅染1|紅染2|S.P.|異色1|異色2|墜落1|墜落2|光榮1|
 StringReplace, AnchorChapterListSR, AnchorChapterList,%CH_AnchorChapter%,%CH_AnchorChapter%|
 Gui, Add, DropDownList,  x200 y%Tab1_Y% w60 gAnchorsettings vAnchorChapter, %AnchorChapterListSR%
 
@@ -300,8 +288,6 @@ Gui Add, Text,  x270 y%Tab1_Y% w90 h20 , 分鐘
 
 Gui, Tab, 出擊２
 Tab2_Y := 90
-;~ Gui, Add, text, x30 y%Tab2_Y% w360 h20  +cFF0088, 本頁為出擊頁面的詳細設定，需勾選自動出擊方有效果
-;~ Gui, Add, GroupBox, x13 y120 w455 h170, ` 　　　　　　　　　　　　　
 Gui, Add, text, x30 y%Tab2_Y% w150 h20, 船䲧已滿：
 Tab2_Y-=3
 iniread, Shipsfull, %SettingName%, Battle, Shipsfull, 停止出擊
@@ -375,7 +361,6 @@ Gui, Add, CheckBox, x280 y%Tab2_Y% w75 h20 gAnchorsettings vRarity4 checked%Rari
 Guicontrol, disable, Rarity4
 
 iniread, DailyGoalSub, %SettingName%, Battle, DailyGoalSub
-;~ Gui, Add, GroupBox, x11 y280 w457 h75, ` 
 Tab2_Y+=33 ;270
 Gui, Add, CheckBox, x30 y%Tab2_Y% w200 h20 gAnchorsettings vDailyGoalSub checked%DailyGoalSub% , 自動執行每日任務：指派：
 Tab2_Y-=2 ;268
@@ -644,14 +629,7 @@ Gui, Add, DropDownList, x+10 y%Tab_Y% gTechacademysettings vPY_TechTarget_06 w40
 Tab_Y += 30
 Gui, Add, CheckBox, x30 y%Tab_Y% w80 h20 gTechacademysettings vTechTarget_07 checked%TechTarget_07% , 基礎研究
 Gui, Add, DropDownList, x+10 y%Tab_Y% gTechacademysettings vPY_TechTarget_07 w40 h150 choose%PY_TechTarget_07% , 1||2|3|
-Tab_Y += 30
-;~ Gui, Add, Text, x30 y%Tab_Y% w80 h20, 研發消耗：
-;~ Tab_Y -= 3
-;~ Gui, Add, CheckBox, x110 y%Tab_Y% w80 h20 gTechacademysettings vTechExpend_Coin checked%TechExpend_Coin% , 金幣
-;~ Gui, Add, CheckBox, x200 y%Tab_Y% w80 h20 gTechacademysettings vTechExpend_Free checked%TechExpend_Free% , 免費
-;~ Gui, Add, CheckBox, x290 y%Tab_Y% w80 h20 gTechacademysettings vTechExpend_Other checked%TechExpend_Other% , 其他
-;~ iniread, Tech_NoCoin, %SettingName%, TechacademySub, Tech_NoCoin, 0
-;~ Gui, Add, CheckBox, x30 y%Tab_Y% w100 h20 gTechacademysettings vTech_NoCoin checked%Tech_NoCoin% , 不使用金幣
+
 
 Gui, Tab, 任　務
 Tab_Y := 90
@@ -819,7 +797,7 @@ Menu, Tray, Tip , Azur Lane `(%title%)
 Winget, UniqueID,, %title%
 Global UniqueID
 Gosub, whitealbum
-Settimer, whitealbum, 10000 ;很重要!
+Settimer, whitealbum, 15000 ;很重要!
 iniread, Autostart, %SettingName%, OtherSub, Autostart, 0
 if (Autostart) {
 	iniread, AutostartMessage, %SettingName%, OtherSub, AutostartMessage
@@ -940,68 +918,37 @@ LogShow("出擊次數已重置")
 sleep 1000
 return
 
-
 Debug2:
 LogShow("檢測中")
 GuiControl, disable, debug
 WinRestore,  %title%
-WinMove,  %title%, , , , %EmulatorResolution_W%, %EmulatorResolution_H%
-text1 := GdiGetPixel(12, 24)
-text2 := DwmGetPixel(12, 24)
-text3 := GdiGetPixel(1300, 681)
-text4 := DwmGetPixel(1300, 681)
-text5 := GdiGetPixel(485, 21)
-text6 := DwmGetPixel(485, 21)
-text11 := Dwmcheckcolor(1300, 681, 16777215)
-text22 := Dwmcheckcolor(13, 25, 16041247)
-text33 := DwmCheckcolor(13, 25, 16041247)
-SysGet, VirtualWidth, 78
-SysGet, VirtualHeight, 79
-WinGetPos, X, Y, Width, Height, %title%
-debug_Y := 1
-Loop {
-	DwmCheckcolor(1, debug_Y, 1250067)
-	debug_Y++
-	debug_YY++
-	if (debug_YY>60)
-		debug_Y := debug_Y_Failed
-} until !DwmCheckcolor(1, debug_Y, 1250067) or debug_YY>60
-debug_X := 1
-Loop {
-	DwmCheckcolor(debug_X, 16, 1250067)
-	debug_X++
-	debug_XX++
-	if (debug_XX>60)
-		debug_X := debug_X_Failed or debug_XX>60
-} until !DwmCheckcolor(debug_X, 16, 1250067)
-WinGet, UniqueID, ,Azur Lane - %title%
-Global UniqueID 
-gui, Color, FF0000
-sleep 100
-Red := DwmGetPixel(336, 456)
-sleep 200
-gui, Color, 00FF00
-sleep 100
-Green := DwmGetPixel(336, 456)
-sleep 200
-gui, Color, 0000FF
-sleep 100
-Blue :=  DwmGetPixel(336, 456)
-sleep 200
-gui, Color, FFFFFF
-sleep 100
-White := DwmGetPixel(336, 456)
-sleep 200
-gui, Color, 000000
-sleep 100
-Black := DwmGetPixel(336, 456)
-sleep 200
-gui, Color, Default
-Msgbox, Red: %Red% `nGreen:%Green%`nBlue: %Blue%`nWhite: %White%`nBlack:%Black%`n`nGdiGetPixel(12, 24)：%text1% and 4294231327`nDwmGetPixel(12, 24)：%text2% and %text22%`nGdiGetPixel(1300, 681)：%text3% and 4294967295`nDwmGetPixel(1300, 681)：%text4% and %text11%`nGdiGetPixel(485, 21)：%text5% and 4280823870`nDwmGetPixel(485, 21)：%text6% and %text33%`n`ndebug_Y: %debug_Y%`ndebug_X: %debug_X%`n`nWin_Width: %Width%`nWin_Height: %Height%`n`nScreenWidth: %VirtualWidth% `nScreenHeight: %VirtualHeight%`nWin_X: %X%`nWin_Y: %Y%`n`n請對此視窗截圖("Alt+PrintScreen")
-Winget, UniqueID,, %title%
-Global UniqueID
+WinMove ,  %title%, , , , %EmulatorResolution_W%, %EmulatorResolution_H%
+Emulator_HomeBtn := "|<>*131$20.ztzzsDzw0zyD7y7sz3z3XzwFzzUzzwDzz3zzkzzwDzz3zzkzzw0000002"
+Emulator_Spot := "|<>*138$11.sDUC080000000020C0y3k"
+Game_Ico := "|<>*181$29.nl3zvb27zrSEDzjdkTzDH03yQC0Aksc0MVk00V30000C0000QM001vw007r000B"
+if Find(x, y, 1247, 661, 1317, 716, Emulator_HomeBtn) ; Home
+{
+	LogShow("Emulator_HomeBtn：x" x " y" y)
+	ControlClick, x%x% y%y%, ahk_id %UniqueID%,,,, NA
+	sleep 2000
+	if Find(x, y, 585, 566, 685, 621, Emulator_Spot)
+		LogShow("Emulator_Spot：x" x " y" y)
+	else
+		LogShow("檢測Emulator_Spot失敗")
+	st1 := A_TickCount
+	if Find(x, y, 0, 0, 1317, 720, Game_Ico)
+	{
+		st2 := A_TickCount - st1
+		LogShow("Game_Ico：x" x " y" y " st: " st2)
+		ControlClick, x%x% y%y%, ahk_id %UniqueID%,,,, NA
+	}
+	else
+		LogShow("檢測Game_Ico失敗")
+}
+else
+	LogShow("檢測Home鍵失敗")
+LogShow("檢測結束。")
 GuiControl,enable, debug
-GuiControl,, ListBoxLog, |
 return
 
 TabFunc: ;切換分頁讀取GUI設定，否則可能導致選項失效
@@ -2194,12 +2141,10 @@ return
 AnchorSub: ;出擊
 if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor) and ((StopAnchor<1 and AnchorMode!="停用") or IsOperation_ReLogin))
 {
-	Random, x, 1025, 1145
-	Random, y, 356, 453
-	C_Click(x,y) ;於首頁點擊點擊右邊"出擊"
+	AC_Click(1025, 356, 1145, 453) ;於首頁點擊點擊右邊"出擊"
 	sleep 2000
 }
-if (Find(x, y, 164, 42, 264, 102, Formation_Upp) and Find(x, y, 0, 587, 86, 647, Formation_Tank)) ;在出擊的編隊頁面
+else if (Find(x, y, 164, 42, 264, 102, Formation_Upp) and Find(x, y, 0, 587, 86, 647, Formation_Tank)) ;在出擊的編隊頁面
 {
     if (Find(x, y, 726, 127, 826, 187, Auto_Battle_Off) and Autobattle="自動") ;Auto Battle >> ON
     {
@@ -2341,7 +2286,7 @@ if (Find(x, y, 164, 42, 264, 102, Formation_Upp) and Find(x, y, 0, 587, 86, 647,
 		StopAnchor := 1
     }
 }
-if (Find(x, y, 750, 682, 850, 742, Battle_Map))
+else if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 {	
 	if (GotoOperation and OperationSub)
 	{
@@ -2403,9 +2348,8 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 	}
 	if (FightRoundsDo and FightRoundsDone<1 and SwitchParty<1)
 	{
-		if ((FightRoundsDoCount=FightRoundsDo2) 
-		or (FightRoundsDo2="或沒子彈" 
-		and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 10, SearchDirection, 129, 96, 1271, 677)))
+		if ((FightRoundsDoCount=FightRoundsDo2)
+		or (FightRoundsDo2="或沒子彈" and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 10, SearchDirection, 129, 96, 1271, 677)))
 		{
 			FightRoundsDone := 1
 			if FightRoundsDo3=撤退
@@ -2438,18 +2382,21 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 			}
 		}
 	}
-	if (AlignCenter and IsDetect<1) and !(GdipImageSearch(x, y, "img/SubChapter/Map_Lower.png", 1, 1, 150, 540, 650, 740)) and ((Bossaction="優先攻擊－當前隊伍" or Bossaction="優先攻擊－切換隊伍") and !(GdipImageSearch(n, m, BOSSICO, 15, 1, MapX1, MapY1, MapX2, MapY2))) ; 嘗試置中地圖
+	if (AlignCenter and IsDetect<1) 
+	and !(GdipImageSearch(x, y, "img/SubChapter/Map_Lower.png", 1, 1, 150, 540, 650, 740))
+	and ((Bossaction="優先攻擊－當前隊伍" or Bossaction="優先攻擊－切換隊伍") 
+	and !(GdipImageSearch(n, m, BOSSICO, 15, 1, MapX1, MapY1, MapX2, MapY2))) ; 嘗試置中地圖
 	{
 		if (AnchorChapter="異色1" or AnchorChapter="異色2")
 		{
 			Swipe(210, 228, 735, 400)
 			sleep 300
 		}
-		sleep 300
-		Swipe(250, 242, 1000, 610)
-		sleep 300
-		Swipe(260, 297, 1050, 620) ;往右下角拖曳
-		Loop
+		sleep 1000
+		Swipe(250, 230, 1000, 610) ;往右下角拖曳
+		Swipe(260, 240, 1050, 620) 
+		AlignCenterCount := 0 ; 計算拖曳次數
+		while (!GdipImageSearch(lx, ly, "img/SubChapter/Map_Lower.png", 1, 1, 300, 550, 1000, 715) and AlignCenterCount<10)
 		{
 			x := 350, y := 220
 			Random, xx, 0, 750
@@ -2458,19 +2405,15 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 			x2 := x1-65, y2 := y1-85
 			Swipe(x1, y1, x2, y2)
 			AlignCenterCount++
-			sleep 100
-		} until GdipImageSearch(x, y, "img/SubChapter/Map_Lower.png", 1, 1, 300, 550, 1000, 715) or AlignCenterCount>10
-		y1 := y-1
-		y2 := y+1
-		Loop, 6
+		}
+		y1 := ly-2, y2 := ly+2
+		while (!GdipImageSearch(x, y, "img/SubChapter/Map_Lower.png", 1, 1, 125, y1, 260, y2) and AlignCenterCount<10)
 		{
-			if (GdipImageSearch(x, y, "img/SubChapter/Map_Lower.png", 1, 1, 125, y1, 220, y2))
-				break
-			Random, y, 180, 650
-			Swipe(650, y, 430, y)
-			sleep 100
-		} until GdipImageSearch(x, y, "img/SubChapter/Map_Lower.png", 1, 1, 125, y1, 220, y2) or AlignCenterCount>10
-		AlignCenterCount := 0
+			Random, x1, 200, 700
+			Random, y1, 250, 650
+			x2 := x1 + 220
+			Swipe(x2, y1, x1, y1)
+		}
 	}
 	Loop, 100
 	{
@@ -2479,17 +2422,15 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 		{
 			SearchDirection := 7
 			MapX1 := if (MapX1-100>=150) ? MapX1-100 : MapX1 := 150
-			if (debugmode)
-				Guicontrol, ,starttext, 目前狀態：搜尋範圍x1: %MapX1% y1: %MapY1% x2: %MapX2% y2: %MapY2%
+			Guicontrol, ,starttext, 目前狀態：搜尋範圍x1: %MapX1% y1: %MapY1% x2: %MapX2% y2: %MapY2%
 		}
 		else if (GdipImageSearch(Mpx, Mpy, "img/SubChapter/Myposition.png", 15, 8, MapX1, MapY1, MapX2, MapY2))
 		{
 			if (Mpx>715)
 				Random, SearchDirection, 7, 8 ;人物在右邊先偵測右邊
-			else
+			else (Mpx<=715 and Mpx>=1)
 				Random, SearchDirection, 5, 6
-			if (debugmode)
-				Guicontrol, ,starttext, 目前狀態：我的位置 x: %Mpx% `, y: %Mpy% 搜尋方向: %SearchDirection%
+			Guicontrol, ,starttext, 目前狀態：我的位置 x: %Mpx% `, y: %Mpy% 搜尋方向: %SearchDirection%
 		}
 		else if (AnchorChapter="7" and AnchorChapter2="2") ;7-2從左邊開始偵查到右邊 提高拿到左邊"？"的機率
 			SearchDirection := 5
@@ -2539,7 +2480,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				bulletFailed++
 			}
 		}
-		if (questFailed<1 and Item_Quest and TakeQuest<6) ;
+		if (questFailed<1 and Item_Quest and TakeQuest<6) ;神秘物資
 		{
 			if (GdipImageSearch(x, y, "img/SubChapter/quest.png", 8, SearchDirection, MapX1, MapY1, MapX2, MapY2))
 			{
@@ -3313,68 +3254,51 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 			}
 			if side<1
 			{
-				;~ Swipe(652,166,652,660)  ;下
 				Swipe(1013,531,211,106)  ;↖
-				sleep 300
 				Swipe(1013,531,211,106)  ;↖
-				sleep 300
 				side := 2
 			}
 			else if side=2
 			{
 				Swipe(652,190,652,710)  ;swipe side : ↓
-				sleep 300
 				side=3
 			}
 			else if side=3
 			{
 				Swipe(652,190,652,710)  ;swipe side : ↓
-				sleep 300
 				side=4
 			}
 			else if side=4
 			{
 				Swipe(257,310,1040,310) ;swipe side : →
-				sleep 300
-				;~ Swipe(1256,310,120,310) ;左
 				side=5
 			}
 			else if side=5
 			{
-				;~ Swipe(1256,310,120,310) ;左
 				Swipe(188,241,1164,621) ;swipe side : ↘
-				sleep 300
 				Swipe(188,241,1164,621) ;swipe side : ↘
-				sleep 300
 				side=6
 			}
 			else if side=6
 			{
-				;~ Swipe(1256,310,120,310) ;左
 				Swipe(604,710,652,180)  ;swipe side : ↑
-				sleep 300
 				side=7
 			}
 			else if side=7
 			{
-				;~ Swipe(200,310,1240,310) ;右
 				Swipe(363,555,1011,220) ;swipe side : ↗
-				sleep 300
 				Swipe(363,555,1011,220) ;swipe side : ↗
-				sleep 300
 				side=8
 			}
 			else if side=8
 			{
-				;~ Swipe(200,310,1240,310) ;右
 				Swipe(1256,310,120,310) ;swipe side : ←
-				sleep 300
 				side=0
 			}
 			sleep 300
 			SearchLoopcountFailed++
 			SearchLoopcountFailed2++
-			if (GdipImageSearch(x, y, "img/SubChapter/Myposition.png", 10, SearchDirection, MapX1, MapY1, MapX2, MapY2) and SearchLoopcountFailed>1)
+			if (GdipImageSearch(x, y, "img/SubChapter/Myposition.png", 15, SearchDirection, MapX1, MapY1, MapX2, MapY2) and SearchLoopcountFailed>1)
 			{
 				if (AnchorChapter=9 and AnchorChapter2=2) ;9-2防卡
 				{
@@ -3413,7 +3337,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 					MoveFailed++
 				}
 			}
-			if (BossactionTarget!=1)
+			if (!BossactionTarget)
 			{
 				TargetFailed := 0
 				TargetFailed2 := 0
@@ -3421,7 +3345,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				TargetFailed4 := 0
 				Plane_TargetFailed1 := 0
 			}
-			else if (BossactionTarget=1 and SearchLoopcountFailed2>15)
+			else if (BossactionTarget and SearchLoopcountFailed2>15)
 			{
 				TargetFailed := 0
 				TargetFailed2 := 0
@@ -3430,7 +3354,7 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 				Plane_TargetFailed1 := 0
 				BossactionTarget := 0
 			}
-			else if (BossFailed=1)
+			else if (BossFailed)
 			{
 				TargetFailed := 0
 				TargetFailed2 := 0
@@ -3475,9 +3399,9 @@ if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 			}
 		}
 		SearchLoopcount++
-	} until !(Find(x, y, 750, 682, 850, 742, Battle_Map))
+	} until !(Find(bmx, bmy, 750, 682, 850, 742, Battle_Map))
 }
-if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
+else if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 {
 	if (MissionSub and Find(x, y, 1014, 651, 1114, 711, CommisionDone)) ;委託任務已完成
 	{
@@ -3681,16 +3605,16 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 	TakeQuest := 0 ;將拿取神祕物資次數歸零
 	NowHP := 0 ;清空目前HP
 	sleep 1000 ;判斷現在位於第幾關 1 2 3 4 5 6 7 8 9 
-	Chapter1 := Find(x, y, 162, 499, 262, 559, "|<>*132$25.wTzwQDzw87zs03zs21zy1kzzksTzsQDzwC40C72073V03VkzzksTzsQDzwC7zy73zz2")  ;第一關 1-1
-	Chapter2 := Find(x, y, 830, 500, 930, 560, "|<>*139$26.UTzy03zz00Tz067zU1Vzw0ETzkwDzwC3zz3VU1kkM0Q8C0727zzk1zzw03zz00zzk0Dzw8") ;第二關 2-1
-	Chapter3 := Find(x, y, 419, 263, 519, 323, "|<>*141$27.UDzz01zzk07zs0Ezy027zs7kzzksDzy71zzks40C7kU1k240C0Ezzk27zy00zzk0Dzy41zzkU") ;第三關 3-1
-	Chapter4 := Find(x, y, 252, 349, 352, 409, "|<>*137$27.w7zz70zzks7zs60zy0k7zs60zzkW7zy4EzzkW40C0EU1k000C00Tzk03zy7kzzky7zy7kzzkU") ;第四關 4-1
-	Chapter5 := Find(x, y, 256, 409, 356, 469, "|<>*135$27.0Dzz00zzk0Dzs0Tzy00Dzs00zzk07zy0Ezzky40C7kU1k240C0Ezzk27zy00zzk07zy41zzkU") ;第五關 5-1
-	Chapter6 := Find(x, y, 933, 541, 1033, 601, "|<>*137$27.kDzz40zzk07zs0Ezy03zzs0Hzzk07zy00zzk240C0EU1k240C0Ezzk27zy0EzzkU7zy61zzkU") ;第六關 6-1
-	Chapter7 := Find(x, y, 222, 524, 322, 584, "|<>*131$25.0Dzw07zw03zs7Vzs3kzy1kzzksTzsQDzwC40C72073303VVzzkkzzsMTzwADzy4Dzz2") ;第七關 7-1
-	Chapter8 := Find(x, y, 568, 230, 668, 290, "|<>*146$27.UDzz01zzk07zs0Ezy027zs0EzzkUDzy41zzk040C0EU1k240C0Ezzk27zy0Ezzk07zy41zzkU") ; 第八關 8-1
-	Chapter9 := Find(x, y, 256, 282, 356, 342, "|<>*146$27.kDzz00zzk07zs0Ezy027zs0Ezzk27zy0Ezzk040C00U1km40C7kzzk27zy0Ezzk07zy61zzkU") ;第九關 9-1
-	Chapter10 := 0
+	Chapter1 := Find(x, y, 162, 499, 262, 559, Map01_1)  ;第一關 1-1
+	Chapter2 := Find(x, y, 830, 500, 930, 560, Map02_1) ;第二關 2-1
+	Chapter3 := Find(x, y, 419, 263, 519, 323, Map03_1) ;第三關 3-1
+	Chapter4 := Find(x, y, 252, 349, 352, 409, Map04_1) ;第四關 4-1
+	Chapter5 := Find(x, y, 256, 409, 356, 469, Map05_1) ;第五關 5-1
+	Chapter6 := Find(x, y, 933, 541, 1033, 601, Map06_1) ;第六關 6-1
+	Chapter7 := Find(x, y, 222, 524, 322, 584, Map07_1) ;第七關 7-1
+	Chapter8 := Find(x, y, 568, 230, 668, 290, Map08_1) ; 第八關 8-1
+	Chapter9 := Find(x, y, 246, 282, 346, 337, Map09_1) ;第九關 9-1
+	Chapter10 := Find(x, y, 215, 285, 315, 340, Map10_1) ;10-1
 	Chapter11 := 0
 	Chapter12 := 0
 	Chapter13 := 0
@@ -3714,6 +3638,7 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 			break
 		}
 	}
+	;~ LogShow("目前位於第 " Chapter " 關")
 	if (AnchorChapter=Chapter) 
 	{
 		;~ LogShow("畫面已經在主線地圖") 
@@ -4013,31 +3938,43 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 		}
 		else if (AnchorChapter=9 and AnchorChapter2=1) ; 選擇關卡9-1
 		{
-			if Find(x, y, 256, 282, 356, 342, "|<>*146$27.kDzz00zzk07zs0Ezy027zs0Ezzk27zy0Ezzk040C00U1km40C7kzzk27zy0Ezzk07zy61zzkU")
+			if Find(x, y, 246, 282, 346, 337, Map09_1)
 			{
 				C_Click(x, y)
 			}
 		}
 		else if (AnchorChapter=9 and AnchorChapter2=2) ; 選擇關卡9-2
 		{
-			if (Find(x, y, 394, 532, 494, 592, "|<>*133$30.kDzw307zs107zs027zsk27zsk27zwV27zzV27zz1040D3040C3m40A7y7zwD27zsD27zs107zs1UDzs1U"))
+			if (Find(x, y, 394, 532, 494, 592, Map09_2))
 			{
 				C_Click(x, y)
 			}
 		}
 		else if (AnchorChapter=9 and AnchorChapter2=3) ; 選擇關卡9-3
 		{
-			if (Find(x, y, 802, 308, 902, 368, "|<>*139$30.kDzw307zs107zs027zsE27zsE27zzk27zz127zz1040D0040Dkm400Ey7zsE27zsE27zs007zs1kDzw3U"))
+			if (Find(x, y, 802, 308, 902, 368, Map09_3))
 			{
 				C_Click(x, y)
 			}
 		}
 		else if (AnchorChapter=9 and AnchorChapter2=4) ; 選擇關卡9-4
 		{
-			if (Find(x, y, 934, 560, 1034, 620, "|<>*134$30.kDzz107zy107zy127zw127zw127zw127zsV27zsV0408V0400Vm4000y7zk027zk027zzV07zzVkDzzVU"))
+			if (Find(x, y, 934, 560, 1034, 620, Map09_4))
 			{
 				C_Click(x, y)
 			}
+		}
+		else if (AnchorChapter=10 and AnchorChapter2=1) ; 選擇關卡10-1
+		{
+			if (Find(x, y, 215, 285, 315, 340, Map10_1))
+			{
+				C_Click(x, y)
+			}
+		}
+		else
+		{
+			LogShow("選擇地圖：" AnchorChapter " 章 第 " AnchorChapter2 "節發生錯誤")
+			return
 		}
 	}
 	else if (AnchorChapter="紅染1" or AnchorChapter="紅染2")
@@ -4334,7 +4271,7 @@ if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁面
 	;~ }
 	;~ LogShow("ERROR")
 }
-Try
+else
 {
 	battlevictory()
 	Battle()
@@ -5384,7 +5321,9 @@ if (AcademyDone<1)
 						sleep 600
 					}
 				}
-				if (GdipImageSearch(x, y, "img/SupplyStore/Part_Cannon.png", 70, 8, ShopX1, ShopY1, ShopX2, ShopY2) and Part_Cannon and Part_CannonCoin<1) 
+				if ((GdipImageSearch(x, y, "img/SupplyStore/Part_Cannon.png", 70, 8, ShopX1, ShopY1, ShopX2, ShopY2)
+				or GdipImageSearch(x, y, "img/SupplyStore/Part_Cannon2.png", 70, 8, ShopX1, ShopY1, ShopX2, ShopY2))
+				and Part_Cannon and Part_CannonCoin<1) 
 				{
 					Part_CannonPos := dwmgetpixel(x,y)
 					LogShow("購買主砲部件T3(金幣)")
@@ -6091,24 +6030,23 @@ else if (num=14)
 return
 
 DelegationMission() {
-
 	Loop
 	{
-		if (Find(x, y, 97, 34, 197, 94, Delegation_WaitingforDelegation))
+		if (Find(x, y, 97, 34, 197, 94, Delegation_WaitingforDelegation)) ;左上角委託
 			break
 		sleep 500
 	}
 	Loop
 	{
-		sleep 400
-		if (DwmCheckcolor(181, 136, 11358530)) 
+		sleep 300
+		if (Find(x, y, 133, 107, 233, 162, Delegation_Page_Done)) 
 		{	
 			LogShow("完成委託任務")
 			C_Click(411, 180)
 		}
-		else if (DwmCheckcolor(58, 76, 16777215) or DwmCheckcolor(1215, 74, 16777215))
+		else if (Find(x, y, 72, 57, 172, 112, Delegation_Spot))
 		{
-			C_Click(411, 180)
+			C_Click(x, y)
 		}
 		else if (Find(x, y, 450, 130, 830, 330, Touch_to_Contunue))
 		{
@@ -6122,26 +6060,26 @@ DelegationMission() {
 		else if (A_index=100 or A_index=120 or A_index=140 or A_index=160)
 		{
 			LogShow("似乎卡住了，嘗試點擊上方1")
-			C_Click(629, 73)
+			C_Click(411, 180)
 		}
 	}
 	C_Click(51, 283) ;緊急
 	sleep 1500
-	Loop
+	Loop, 20
 	{
-		sleep 300
+		sleep 500
 	} until DwmCheckcolor(53, 295, 16252820) ;等待切換到緊急頁面
 	Loop
 	{
 		sleep 200
-		if (DwmCheckcolor(181, 136, 11358530))
-		{
+		if (Find(x, y, 133, 107, 233, 162, Delegation_Page_Done)) 
+		{	
 			LogShow("完成委託任務")
 			C_Click(411, 180)
 		}
-		else if (DwmCheckcolor(58, 76, 16777215) or DwmCheckcolor(1215, 74, 16777215))
+		else if (Find(x, y, 72, 57, 172, 112, Delegation_Spot))
 		{
-			C_Click(411, 180)
+			C_Click(x, y)
 		}
 		else if (Find(x, y, 450, 130, 830, 330, Touch_to_Contunue))
 		{
@@ -6155,7 +6093,7 @@ DelegationMission() {
 		else if (A_index=100 or A_index=120 or A_index=140 or A_index=160)
 		{
 			LogShow("似乎卡住了，嘗試點擊上方2")
-			C_Click(629, 73)
+			C_Click(411, 180)
 		}
 		else if (Find(x, y, 0, 278, 100, 338, Delegation_urgent))
 		{
@@ -6330,7 +6268,6 @@ DelegationMission2()
 
 battlevictory() ;戰鬥勝利(失敗) 大獲全勝
 {
-	;~ Global
 	if (Find(x, y, 783, 385, 883, 445, Battle_Victory, 0.1, 0.1))
 	{	
 		if (Find(x, y, 790, 438, 870, 498, "|<>*85$18.Tzw7zsbzllzXtz7wSDyQTz8zzlzzXzzZzzATySTwz7tzbnzlbztDzwU")) ; 有隊員倒下
@@ -6965,7 +6902,8 @@ Battle_Operation()
 				; 敵方血量起點 X: 694 Y: 87 Color : 15672353 終點 X: 1001
 				MyHpbar := [271, 79, 586, 90]
 				EmHpbar := [692, 79, 1004, 90]
-				if (GdipImageSearch(myhpx, my, "img\battle\OperationHp.png", 50, 1, MyHpbar[1], MyHpbar[2], MyHpbar[3], MyHpbar[4]) and GdipImageSearch(emhpx, ey, "img\battle\OperationHp.png", 50, 8, EmHpbar[1], EmHpbar[2], EmHpbar[3], EmHpbar[4]))
+				if (GdipImageSearch(myhpx, my, "img\battle\OperationHp.png", 50, 1, MyHpbar[1], MyHpbar[2], MyHpbar[3], MyHpbar[4]) 
+				and GdipImageSearch(emhpx, ey, "img\battle\OperationHp.png", 50, 8, EmHpbar[1], EmHpbar[2], EmHpbar[3], EmHpbar[4]))
 				{
 					Myhp := 100-Ceil((myhpx-MyHpbar[1])/(MyHpbar[3]-MyHpbar[1])*100)  ; 0~315
 					Emhp := Ceil(((emhpx-EmHpbar[1])/(EmHpbar[3]-EmHpbar[1]))*100) ; 0~312
@@ -6980,7 +6918,8 @@ Battle_Operation()
 				if (Myhp<OperatioMyHpBar and Emhp>OperatioEnHpBar)
 				{
 					sleep 1000
-					if (GdipImageSearch(myhpx, my, "img\battle\OperationHp.png", 50, 1, MyHpbar[1], MyHpbar[2], MyHpbar[3], MyHpbar[4]) and GdipImageSearch(emhpx, ey, "img\battle\OperationHp.png", 50, 8, EmHpbar[1], EmHpbar[2], EmHpbar[3], EmHpbar[4]))
+					if (GdipImageSearch(myhpx, my, "img\battle\OperationHp.png", 50, 1, MyHpbar[1], MyHpbar[2], MyHpbar[3], MyHpbar[4]) 
+					and GdipImageSearch(emhpx, ey, "img\battle\OperationHp.png", 50, 8, EmHpbar[1], EmHpbar[2], EmHpbar[3], EmHpbar[4]))
 					{
 						Myhp := 100-Ceil((myhpx-MyHpbar[1])/(MyHpbar[3]-MyHpbar[1])*100)  ; 0~315
 						Emhp := Ceil(((emhpx-EmHpbar[1])/(EmHpbar[3]-EmHpbar[1]))*100) ; 0~312
@@ -7513,16 +7452,7 @@ Swipe(x1,y1,x2,y2,swipetime=200) {
 		y1 := y1-36, y2 := y2-36
 		runwait,  ld.exe -s %emulatoradb% input swipe %x1% %y1% %x2% %y2% %swipetime%,%ldplayer%, Hide ;雷電4.0似乎有BUG 偶爾會卡住
 	}
-	sleep 450
-}
-
-Ld_Click(PosX,PosY) {
-	Random, randomsleep, 400, 550
-	random , x, PosX - 3, PosX + 3 ;隨機偏移 避免偵測
-	random , y, PosY - 2, PosY + 2
-	sleep %randomsleep%
-	Runwait, ld.exe -s %emulatoradb% input tap %x% %y%, %ldplayer%, Hide
-	sleep 500
+	sleep 600
 }
 
 AC_Click(PosX1, PosY1, PosX2, PosY2)
@@ -7581,28 +7511,6 @@ Capture2(x1, y1, x2, y2) {
 	Gdip_DisposeImage(pBitmap_part)
 }
 
-AreaDwmCheckcolor(byref x, byref y, x1, y1, x2, y2, color="") {
-	defaultX1 := x1, defaultY1 := y1, y := y1
-	hDC := DllCall("user32.dll\GetDCEx", "UInt", UniqueID, "UInt", 0, "UInt", 1|2)
-	Loop {
-		x1 := x1 +1, x := x1
-		if (x1=x2) {
-			x1 := defaultX1,	y1 := y1 +1, y := y1
-		}
-		pix := DllCall("gdi32.dll\GetPixel", "UInt", hDC, "Int", x, "Int", y, "UInt")
-		pix := ConvertColor(pix)
-	} until pix=color or y=y2
-	DllCall("user32.dll\ReleaseDC", "UInt", UniqueID, "UInt", hDC)
-	DllCall("gdi32.dll\DeleteDC", "UInt", hDC)
-	if (pix=color) {
-		x := x,	y := y, a := 1
-		return a
-	} else {
-		x :="" , y :="", a := 0
-		return a
-	}
-}
-
 ColorVariation(Color1, Color2) {
 	color := ConvertColor(Color1)
 	pix := ConvertColor(Color2)
@@ -7654,11 +7562,12 @@ GdipImageSearch(byref x, byref y, imagePath = "img/picturehere.png",  Variation=
 	}
 	pBitmap := Gdip_BitmapFromHWND(UniqueID)
 	bmpNeedle := Gdip_CreateBitmapFromFile(imagePath)
-    Gdip_ImageSearch(pBitmap, bmpNeedle, LIST, x1, y1, x2, y2, Variation, , direction, 1)
+    if (Gdip_ImageSearch(pBitmap, bmpNeedle, LIST, x1, y1, x2, y2, Variation, , direction, 1)) {
+		LISTArray := StrSplit(LIST, ",")
+		x := LISTArray[1], y := LISTArray[2]
+	 }
     Gdip_DisposeImage(bmpNeedle)
 	Gdip_DisposeImage(pBitmap)
-    LISTArray := StrSplit(LIST, ",")
-    x := LISTArray[1], y := LISTArray[2]
     return List
 }
 
@@ -7990,7 +7899,7 @@ if !(Is_TT_Text2) {
 	Ldplayer4_TT := "僅供測試使用。"
 	NoxPlayer5_TT := "僅供測試使用。"
 	Operation_Relogin_TT := "偶爾會刷新到排位更前面的對手。"
-	AutoBuild_TT := "使用本功能，船塢已滿設定必須是「整理船塢」，`n否則可能於船塢已滿時發生錯誤。"
+	AutoBuild_TT := "使用本功能，船塢已滿設定必須是「整理船塢」，`n`n否則可能於船塢已滿時發生錯誤。"
 }
 if !(Is_TT_Text)
 {
@@ -8008,7 +7917,9 @@ GetLdplayer() {
 	Loop, Read, %ldplayer%\ping.txt
 	{
 		contents := StrSplit(a_loopreadline, ",")
-		If (contents[2]=title or (contents[2]="LDplayer" and  title="雷電模擬器") or (title="雷電模擬器-" . contents[1] and contents[2]= "LDplayer-" . contents[1])) {
+		If (contents[2]=title 
+		or (contents[2]="LDplayer" and  title="雷電模擬器") 
+		or (title="雷電模擬器-" . contents[1] and contents[2]= "LDplayer-" . contents[1])) {
 			LDnum := contents[1]
 			break
 		}
@@ -8137,7 +8048,7 @@ __UpdateProgressBar:
 Return
 }
 
-FindFleet(byref x, byref y, imagearray, Variation=100, direction = 1, x1=0, y1=0, x2=1280, y2=720) {
+FindFleet(byref x, byref y, imagearray, Variation=100, direction = 1, x1=0, y1=0, x2=0, y2=0) {
 	pBitmap := Gdip_BitmapFromHWND(UniqueID)
 	for k, v in imagearray
 	{
@@ -8314,7 +8225,7 @@ Update_help() {
 ;~ F3::
 ;~ MapX1 := 10, MapY1 := 100, MapX2 := 1271, MapY2 := 680
 ;~ Random, SearchDirection, 1, 8
-;~ if (GdipImageSearch(x, y, "img/SubChapter/Bullet_None.png", 10, SearchDirection, MapX1, MapY1, MapX2, MapY2))
+;~ if (GdipImageSearch(x, y, "img/SupplyStore/Part_Cannon2.png", 70, SearchDirection, MapX1, MapY1, MapX2, MapY2))
 ;~ {
 ;~ WinActivate, %title%
 ;~ mousemove, %x%, %y%
