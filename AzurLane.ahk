@@ -174,7 +174,7 @@ Tab1_Y += 5
 Gui, Add, text, x180 y%Tab1_Y% w20 h20  , 第
 Tab1_Y -= 5
 
-AnchorChapterList = 1|2|3|4|5|6|7|8|9|10|紅染1|紅染2|S.P.|異色1|異色2|墜落1|墜落2|光榮1|
+AnchorChapterList = 1|2|3|4|5|6|7|8|9|10|紅染1|紅染2|希望1|異色1|異色2|墜落1|墜落2|光榮1|
 StringReplace, AnchorChapterListSR, AnchorChapterList,%CH_AnchorChapter%,%CH_AnchorChapter%|
 Gui, Add, DropDownList,  x200 y%Tab1_Y% w60 gAnchorsettings vAnchorChapter, %AnchorChapterListSR%
 
@@ -811,10 +811,10 @@ else if (CheckUpdate) { ;啟動時檢查自動更新
 }
 ;//////////////刪除雷電模擬器可能的惡意廣告檔案//////////////////
 iniread, DeleteAdsCheck, %SettingName%, DeleteAdsCheck, DeleteAdsCheck, 0
-DefaultDir = %A_WorkingDir%
-SetWorkingDir, %ldplayer%
 if !(DeleteAdsCheck)
 {
+	DefaultDir = %A_WorkingDir%
+	SetWorkingDir, %ldplayer%
 	if (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe") or FileExist("news")) {
 		Text := "發現"
 		. "<a href=""https://www.reddit.com/r/RagnarokMobile/comments/e6cccx/tech_support_ldplayer_update_added_shady/"">"
@@ -838,7 +838,10 @@ if !(DeleteAdsCheck)
 				FileDelete, ldnews.exe
 				FileRemoveDir, news, 1
 				if (A_index>20)
-					DeleteAdFailed := 1
+				{
+					LogShow("刪除廣告檔案過程中發生問題(Ld_Dir)")
+					break
+				}
 			}		
 			SetWorkingDir, %A_temp%
 			while (FileExist("fyservice.exe") or FileExist("fynews.exe") or FileExist("ldnews.exe"))
@@ -850,7 +853,10 @@ if !(DeleteAdsCheck)
 				FileDelete, fyservice.exe
 				FileDelete, ldnews.exe
 				if (A_index>20)
-					DeleteAdFailed := 1
+				{
+					LogShow("刪除廣告檔案過程中發生問題(Temp_Dir)")
+					break
+				}
 			}
 			While (InStr(FileExist("fy"), "D"))
 			{
@@ -859,16 +865,15 @@ if !(DeleteAdsCheck)
 				WinClose, ahk_exe ldnews.exe
 				FileRemoveDir, fy, 1
 				if (A_index>20)
+				{
+					LogShow("刪除廣告檔案過程中發生問題(Ld_Dir_2)")
 					break
+				}
 			}
-			if DeleteAdFailed
-				LogShow("廣告檔案刪除過程中出現問題")
-			else
-				LogShow("廣告檔案刪除成功")
 		}
 	}
+	SetWorkingDir, %DefaultDir%
 }
-SetWorkingDir, %DefaultDir%
 if (substr(A_osversion, 1, 2)!=10)
 {
 	iniread, OsVersionCheck, %SettingName%, Osversion, OsVersionCheck
@@ -2348,7 +2353,7 @@ else if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 	}
 	if (FightRoundsDo and FightRoundsDone<1 and SwitchParty<1)
 	{
-		if ((FightRoundsDoCount=FightRoundsDo2)
+		if ((FightRoundsDoCount>=FightRoundsDo2)
 		or (FightRoundsDo2="或沒子彈" and GdipImageSearch(n, n, "img/SubChapter/Bullet_None.png", 10, SearchDirection, 129, 96, 1271, 677)))
 		{
 			FightRoundsDone := 1
@@ -3658,9 +3663,9 @@ else if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁
 			return
 		}
 	}
-	else if (Chapter=16 or Chapter=21) and (AnchorChapter="S.P." AnchorChapter="光榮1")
+	else if (Chapter=16 or Chapter=21) and (AnchorChapter="希望1" AnchorChapter="光榮1")
 	{
-		;~ LogShow("畫面已經在S.P.地圖") 
+		;~ LogShow("畫面已經在希望1地圖") 
 	}
 	else if ((Chapter=14 or Chapter=15 or Chapter=16 or Chapter=17 or Chapter=18 or Chapter=19 or Chapter=20) and ((OperationSub and OperationDone<1) or (DailyGoalSub and DailyDone<1)))
 	{
@@ -3971,6 +3976,13 @@ else if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁
 				C_Click(x, y)
 			}
 		}
+				else if (AnchorChapter=10 and AnchorChapter2=2) ; 選擇關卡10-2
+		{
+			if (Find(x, y, 483, 425, 583, 480, Map10_2))
+			{
+				C_Click(x, y)
+			}
+		}
 		else
 		{
 			LogShow("選擇地圖：" AnchorChapter " 章 第 " AnchorChapter2 "節發生錯誤")
@@ -4041,28 +4053,28 @@ else if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁
 			}
 		}
 	}
-	else if (AnchorChapter="S.P.")
+	else if (AnchorChapter="希望1")
 	{
-		if (DwmCheckcolor(1199, 234, 16772054) and AnchorChapter="S.P.")
+		if (DwmCheckcolor(1199, 234, 16772054) and AnchorChapter="希望1")
 		{
 			C_Click(1201, 226) ;畫面在主線地圖時，點擊特殊作戰進入SP地圖
 			sleep 2000
 		}
-		if (AnchorChapter="S.P." and AnchorChapter2=1)
+		if (AnchorChapter="希望1" and AnchorChapter2=1)
 		{
 			if (DwmCheckcolor(530, 265, 16777215))
 			{
 				C_Click(531,264) ;點擊SP1
 			}
 		}
-		else if (AnchorChapter="S.P." and AnchorChapter2=2)
+		else if (AnchorChapter="希望1" and AnchorChapter2=2)
 		{
 			if (DwmCheckcolor(819, 395, 16777215))
 			{
 				C_Click(820,394) ;點擊SP2
 			}
 		}
-		else if (AnchorChapter="S.P." and AnchorChapter2=3)
+		else if (AnchorChapter="希望1" and AnchorChapter2=3)
 		{
 			if (DwmCheckcolor(649, 601, 16777215))
 			{
@@ -4466,14 +4478,20 @@ Loop
 		LogShow("位於遊戲首頁，自動登入")
 		sleep 5000
 		C_Click(642, 420)
-		sleep 5000
+		Loop, 10
+			sleep 1000
 	}
-	if (Find(x, y, 420, 450, 850, 600, Game_Update)) ;更新提示
+	else if (Find(x, y, 420, 450, 850, 600, Game_Update)) ;更新提示
 	{
 		LogShow("開始自動更新")
 		C_Click(786, 534)
 	}
-	if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor))
+	else if (Find(x, y, 271, 171, 371, 226, System_Announce))
+	{
+		LogShow("關閉系統公告(維修)")
+		C_Click(955, 199)
+	}
+	else if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor))
 	{
 		LogShow("自動登入完畢。")
 		break
@@ -4818,7 +4836,7 @@ if (MissionCheck2) ;在主選單偵測到軍事任務已完成
 		}
 		else if (Find(x, y, 210, 322, 310, 382, Delegation_idle)) ;如果已經"空閒"
 		{
-			sleep 500
+			sleep 1000
 			if (Find(x, y, 210, 322, 310, 382, Delegation_idle))
 			{
 				C_Click(441, 314)
@@ -4832,22 +4850,19 @@ if (MissionCheck2) ;在主選單偵測到軍事任務已完成
 		}
 		else
 		{
-			LoopVar++
-			if (LoopVar=50 or LoopVar=60 or LoopVar=70)
+			if (A_Index=50 or A_Index=60 or A_Index=70 or A_Index=80 or A_Index=90)
 			{
 				C_Click(514, 116)
 			}
-			if (LoopVar>100)
+			else if (A_Index>100)
 			{
 				LogShow("軍事委託出現錯誤2")
-				LoopVar := 0
 				Rmenu := 0
 				Break
 			}
 		}
 		GetItem()
 	}
-	LoopVar := 0
 	if (Rmenu=1)
 	{
 		Rmenu := 0
@@ -5413,7 +5428,9 @@ if (AcademyDone<1)
 						sleep 600
 					}
 				}
-				if (GdipImageSearch(x, y, "img/SupplyStore/Part_Common.png", 70, 8, ShopX1, ShopY1, ShopX2, ShopY2) and Part_Common and Part_CommonCoin<1) 
+				if ((GdipImageSearch(x, y, "img/SupplyStore/Part_Common.png", 70, 8, ShopX1, ShopY1, ShopX2, ShopY2)
+				or GdipImageSearch(x, y, "img/SupplyStore/Part_Common2.png", 70, 8, ShopX1, ShopY1, ShopX2, ShopY2))
+				and Part_Common and Part_CommonCoin<1)
 				{
 					Part_CommonPos := dwmgetpixel(x,y)
 					LogShow("購買共通部件(金幣)")
@@ -6756,7 +6773,7 @@ ChooseParty(Byref StopAnchor)
 	if (Find(x, y, 112, 97, 212, 157, Fleet_Select))
 	{
 		LogShow("選擇出擊艦隊中。")
-		if (AnchorMode="普通") and !(AnchorChapter="S.P.")
+		if (AnchorMode="普通") and !(AnchorChapter="希望1")
 		{
 			C_Click(1142, 370) ;先清掉第二艦隊
 			sleep 300
@@ -6869,7 +6886,7 @@ ChooseParty(Byref StopAnchor)
 					sleep 1000
 					Swipe(500, 400, 780, 570)
 				}
-				else if ((AnchorChapter="S.P.") and AnchorChapter2="3") ;如果是SP3 先往左上拉 避免開場的多次偵測
+				else if ((AnchorChapter="希望1") and AnchorChapter2="3") ;如果是SP3 先往左上拉 避免開場的多次偵測
 				{
 					Swipe(272, 419, 1100, 422)
 				}
@@ -8105,7 +8122,7 @@ SelectMode() {
 				return
 			}
 		}
-		else if (AnchorChapter="S.P.")
+		else if (AnchorChapter="希望1")
 		{
 			;不做任何事 (SP似乎沒有分難度)
 		}

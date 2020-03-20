@@ -309,7 +309,9 @@ CRIWare := "|<>*173$50.7D14W8QQnnstAaD75srCHNXN0sAnYqQqEC3AthbBY30zCPFHlksDXbIIs
 
 Game_Update := "|<>*207$66.U0T3vzzzUzzwDq3lztzUz7wDU3Uzsz0y3wD67lzU0000sS63nz1zzz1sS41bz1zzy7sTAMzz1zzsDsTsMnz1zzkDszssVza000Dkls01zzz1zzk0kkzzzz1zzkkUkzzzz1zzkkUkrzyD1xzUk0k3zy31szUkk01zy71sDUkkkzzw700D0kkkzzw71zzkkkkrzw71zzkkkk3zwD1zzkkk01zw71zzkkkkTzs11zzk0kkzzsE1zzkUkktzks000kkkkkzlw001kzk00TXy003U"
 
+System_Announce := "|<>*175$29.k00Dzzk7zzz07zzs1yDz0zkDw000Dw000zs007zkw0zzzUADzw3w7z0zw3k0003U00A7007w708DsC7kTsz7Ulzy31kTs23kTkQ7UT1sDUQ7kTUky0z17y1z3"
 
+CheckServer := "|<>*144$26.TzDzDzVzvzkTzzw7zzz1zzzkTzzw7zzz1zzzkTzzw7zrz1zszkTxbw7ywz1zTbkTjwy7rs"
 
 global Login_In, Login_Google, Select_Account, CRIWare
 
@@ -409,7 +411,7 @@ Map09_3 := "|<>*139$30.kDzw307zs107zs027zsE27zsE27zzk27zz127zz1040D0040Dkm400Ey7
 Map09_4 := "|<>*134$30.kDzz107zy107zy127zw127zw127zw127zsV27zsV0408V0400Vm4000y7zk027zk027zzV07zzVkDzzVU"
 
 Map10_1 := "|<>*139$36.wS3zzssQ1zzkUM0zz00MEzy0UMEzz0sMEzzksMEzzksMEzzksMEU1ksMEU1ksMEU1ksMEzzksMEzzksMEzzksQ1zzksS3zzkU"
-Map10_2 := 
+Map10_2 := "|<>*136$39.wS3zzUT3UDzs1UM0zz08327zskUMEzz67327zwVsMEzzwD327zz1sMEU1sT3240C7sMEU1Uz327zwDsMEzz1z327zs1sQ1zz0D3kDzs1U"
 Map10_3 := 
 Map10_4 := 
 
