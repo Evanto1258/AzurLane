@@ -1631,15 +1631,13 @@ OldVersion := ""
 return
 
 EmulatorCrushCheckSub:
-GameCrushed_1920x1080 := [DwmCheckcolor(426, 101, 908287), DwmCheckcolor(1167, 49, 16777215), DwmCheckcolor(635, 631, 16777215), DwmCheckcolor(438, 102, 16768256)]
-GameCrushed_1280x720 := [DwmCheckcolor(432, 115, 907775) and DwmCheckcolor(446, 116, 16768000) and DwmCheckcolor(441, 120, 16201485) and DwmCheckcolor(633, 596, 16777215)]
-if (CheckArray2(GameCrushed_1920x1080*) or CheckArray2(GameCrushed_1280x720*)) ;遊戲閃退 位於模擬器桌面
+Critical
+if (Find(x, y, 1107, 25, 1207, 80, Emulator_Wifi)) ;遊戲閃退 位於模擬器桌面
 {
-	LogShow("=========遊戲閃退，重啟=========")
-	EmulatorCrushCheckCount := 0
 	iniwrite, "=======遊戲閃退，自動重啟=======", %SettingName%, OtherSub, AutostartMessage
 	iniwrite, 1, %SettingName%, OtherSub, Autostart
 	runwait, %Consolefile% quit --index %emulatoradb% , %ldplayer%, Hide
+	Critical, off
 	sleep 10000
 	reload
 }
@@ -1649,7 +1647,7 @@ Loop, 3
 	CheckPostion%EmulatorCrushCheckCount% := [DwmGetpixel(50, 95), DwmGetpixel(582, 74), DwmGetpixel(961, 242),DwmGetpixel(320, 215), DwmGetpixel(778, 583), DwmGetpixel(312, 446), DwmGetpixel(164, 173)]
 	For k, v in CheckPostion%EmulatorCrushCheckCount%
 		s%EmulatorCrushCheckCount%%k% := v
-	sleep 100
+	sleep 150
 	if (EmulatorCrushCheckCount=3)
 	{
 		Loop, 3
@@ -1673,8 +1671,9 @@ Loop, 3
 									Checkzz++
 									if (Checkzz>=9)
 									{
+										Critical, off
 										LogShow("畫面靜止，嘗試返回首頁")
-										C_Click(1271, 70)
+										C_Click(1240, 65)
 										sleep 5000
 										if (Find(x, y, 734, 401, 834, 461, MainPage_Btn_Formation))
 										{
@@ -1716,17 +1715,14 @@ return
 
 Mainsub: ;優先檢查出擊以外的其他功能
 if (Noxplayer5)
-{
 	LDplayerCheck := Find(x, y, 0, 0, 60, 35, NoxPlayerLogo) 
-} 
 else 
-{
 	LDplayerCheck := Find(x, y, 0, 0, 60, 35, LdPlayerLogo) 
-}
 if !(LDplayerCheck) 
 {
 	Guicontrol, ,starttext, 目前狀態：未能正確偵測到模擬器。
 	sleep 5000
+	return
 }
 Formattime, Nowtime, ,HHmm
 if !(LDplayerCheck) ;檢查模擬器有沒有被縮小
@@ -2059,7 +2055,6 @@ if (Techacademy_Done) ;軍部研究室OK
 		if (Find(x, y, 422, 587, 522, 647, TechPage_Stop_Teching) or TechFailed>=50 or A_index>=80) ;已經開始研發(停止研發按鈕)
 		{
 			LogShow("離開軍部科研室")
-			;~ Tech_NoCoincount := 0
 			TechFailed := 0
 			C_Click(714, 712)
 			sleep 500
@@ -2144,7 +2139,7 @@ if (Find(x, y, 1018, 486, 1118, 546, GoMatchingGame)) {
 return
 
 AnchorSub: ;出擊
-if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor) and ((StopAnchor<1 and AnchorMode!="停用") or IsOperation_ReLogin))
+if (Find(x, y, 996, 362, 1096, 422, MainPage_Btn_WeighAnchor) and ((StopAnchor<1 and AnchorMode!="停用") or GotoOperation))
 {
 	AC_Click(1025, 356, 1145, 453) ;於首頁點擊點擊右邊"出擊"
 	sleep 2000
@@ -2206,13 +2201,26 @@ else if (Find(x, y, 164, 42, 264, 102, Formation_Upp) and Find(x, y, 0, 587, 86,
 	shipsfull()
 	FindBoss := 0
 	IsDetect := 0
-    TargetFailed := 0
-    TargetFailed2 := 0
-    TargetFailed3 := 0
-    TargetFailed4 := 0
-    TargetFailed5 := 0
-    TargetFailed6 := 0
-	Plane_TargetFailed1 := 0
+	if (BossFailed)
+	{
+		TargetFailed := 1
+		TargetFailed2 := 1
+		TargetFailed3 := 1
+		TargetFailed4 := 1
+		TargetFailed5 := 1
+		TargetFailed6 := 1
+		Plane_TargetFailed1 := 1
+	}
+	else
+	{
+		TargetFailed := 0
+		TargetFailed2 := 0
+		TargetFailed3 := 0
+		TargetFailed4 := 0
+		TargetFailed5 := 0
+		TargetFailed6 := 0
+		Plane_TargetFailed1 := 0
+	}
     BossFailed := 0
     BulletFailed := 0
     QuestFailed := 0
@@ -2428,6 +2436,10 @@ else if (Find(x, y, 750, 682, 850, 742, Battle_Map))
 			SearchDirection := 7
 			MapX1 := if (MapX1-100>=150) ? MapX1-100 : MapX1 := 150
 			Guicontrol, ,starttext, 目前狀態：搜尋範圍x1: %MapX1% y1: %MapY1% x2: %MapX2% y2: %MapY2%
+		}
+		else if (AnchorChapter="10" and (AnchorChapter2>="1" and AnchorChapter2<="3"))
+		{
+			Random, SearchDirection, 7, 8
 		}
 		else if (GdipImageSearch(Mpx, Mpy, "img/SubChapter/Myposition.png", 15, 8, MapX1, MapY1, MapX2, MapY2))
 		{
@@ -3976,9 +3988,16 @@ else if (Find(x, y, 95, 34, 195, 94, Weigh_Anchor)) ;在出擊選擇關卡的頁
 				C_Click(x, y)
 			}
 		}
-				else if (AnchorChapter=10 and AnchorChapter2=2) ; 選擇關卡10-2
+		else if (AnchorChapter=10 and AnchorChapter2=2) ; 選擇關卡10-2
 		{
 			if (Find(x, y, 483, 425, 583, 480, Map10_2))
+			{
+				C_Click(x, y)
+			}
+		}
+		else if (AnchorChapter=10 and AnchorChapter2=3) ; 選擇關卡10-3
+		{
+			if (Find(x, y, 665, 582, 765, 637, Map10_3))
 			{
 				C_Click(x, y)
 			}
@@ -4822,6 +4841,7 @@ if (MissionCheck2) ;在主選單偵測到軍事任務已完成
 		else if (A_Index>200)
 		{
 			LogShow("軍事委託出現錯誤1")
+			C_Click(1234, 100)
 			return
 		}
 		sleep 500
